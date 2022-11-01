@@ -13,6 +13,7 @@
     "@types/react-dom": "^18.0.8",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26",
+    "file-loader": "^6.2.0",
     "google-map-react": "^2.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -47,6 +48,13 @@
     ]
   },
   "devDependencies": {
-    "@types/navermaps": "^3.0.17"
+    "@babel/core": "^7.19.6",
+    "@babel/preset-env": "^7.19.4",
+    "@types/navermaps": "^3.0.17",
+    "babel-loader": "^9.0.1",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
   }
 }

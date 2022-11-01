@@ -9,7 +9,7 @@ function Router() {
     <BrowserRouter>
       <Mobile>
         <Routes>
-          <Route path="/" element={<ChurMap />}></Route>
+          <Route path="/nmap" element={<ChurMap />}></Route>
         </Routes>
       </Mobile>
     </BrowserRouter>
