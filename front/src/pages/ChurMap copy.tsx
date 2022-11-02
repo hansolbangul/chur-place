@@ -102,23 +102,18 @@ const { naver } = window;
 export const ChurMap = () => {
   const mapElement = useRef(null);
   const [map, setMap] = useState<naver.maps.Map | null>(null);
+  // const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
   const [curLocation, setCurLocation] = useState<naver.maps.LatLng | null>(
     null
   );
-  const [myLocation, setMyLocation] = useState<{ latitude: number; longitude: number } | string>("");
+
   // 현재 위치가 변경되는 것을 mocking
-
-  console.log(map, marker)
   useEffect(() => {
-    if (!naver) return;
+    if (!mapElement.current || !naver) return;
 
-    if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(successPosition, errorPosition);
-      // navigator.geolocation.getCurrentPosition(centerPosition, errorPosition);
-    } else {
-      window.alert("현재위치를 알수 없습니다.");
-    }
+    navigator.geolocation.getCurrentPosition(centerPosition, errorPosition);
+
     // 실시간 위치 체크
     // navigator.geolocation.watchPosition(successPosition, errorPosition);
 
@@ -126,35 +121,10 @@ export const ChurMap = () => {
     // navigator.geolocation.getCurrentPosition(successPosition, errorPosition);
   }, []);
 
-  const successPosition = ({ coords }: any) => {
-    setMyLocation({
-      latitude: coords.latitude,
-      longitude: coords.longitude
-    })
-  }
-
-  useEffect(() => {
-    console.log(myLocation, map, marker)
-    if (typeof myLocation === 'string' || !naver) return
-    if (!map || !marker) {
-      centerPosition(myLocation)
-    } else {
-
-      const location = new naver.maps.LatLng(myLocation.latitude, myLocation.longitude);
-      // map.setCenter(location);
-      marker.setPosition(location);
-    }
-  }, [myLocation])
-
-  const centerPosition = (coords: any) => {
+  const centerPosition = ({ coords }: any) => {
     if (!mapElement.current || !naver) return;
 
-    // if (!naver) return;
     const location = new naver.maps.LatLng(coords.latitude, coords.longitude);
-    // setMyLocation({
-    //   latitude: coords.latitude,
-    //   longitude: coords.longitude
-    // })
 
     const mapOptions: naver.maps.MapOptions = {
       center: location,
@@ -164,13 +134,7 @@ export const ChurMap = () => {
         position: naver.maps.Position.TOP_RIGHT,
       },
     };
-    // const mapSet = new naver.maps.Map(mapElement.current, mapOptions);
-    const mapSet = new naver.maps.Map('mapElement', mapOptions);
-    setMap(mapSet)
-
-    naver.maps.Event.addListener(mapSet, "click", (e) => {
-      console.log(e.coord)
-    });
+    const mapSet = new naver.maps.Map(mapElement.current, mapOptions);
 
     data.map(item => {
       const marker = new naver.maps.Marker({
@@ -183,8 +147,27 @@ export const ChurMap = () => {
       })
       setMarker(marker)
     })
+    console.log(mapSet)
+    setMap(mapSet)
 
-    const markerCenter = new naver.maps.Marker({
+    // const marker = new naver.maps.Marker({
+    //   position: location,
+    //   map: mapSet,
+    //   title: '나의 위치',
+    //   icon: {
+    //     content: `<img class='icon' src=${image} />`,
+    //   },
+    // });
+    // setMarker(marker);
+
+    console.log(map)
+
+    navigator.geolocation.watchPosition(({ coords }) => successPosition({ coords }, mapSet), errorPosition);
+  }
+
+  const successPosition = ({ coords }: any, mapSet: any) => {
+    const location = new naver.maps.LatLng(coords.latitude, coords.longitude);
+    const marker = new naver.maps.Marker({
       position: location,
       map: mapSet,
       title: '나의 위치',
@@ -192,8 +175,7 @@ export const ChurMap = () => {
         content: `<img class='icon' src=${image} />`,
       },
     });
-    setMarker(markerCenter);
-
+    setMarker(marker);
   }
 
   const errorPosition = () => {
@@ -203,26 +185,23 @@ export const ChurMap = () => {
   const btn = () => {
     // latitude -= 0.001
     // longitude -= 0.001
+    latitude += 0.001
     // longitude -= 0.001
-    console.log(myLocation)
-    if (typeof myLocation === 'string') return
-    console.log(myLocation)
-    const position = new naver.maps.LatLng(latitude, longitude)
-    setMyLocation({ latitude: myLocation.latitude - 0.001, longitude: myLocation.longitude - 0.001 });
+    setCurLocation(new naver.maps.LatLng(latitude, longitude));
   }
 
-  // useEffect(() => {
-  //   if (!map || !marker || !curLocation) return;
-  //   // console.log(map, marker, curLocation)
+  useEffect(() => {
+    if (!map || !marker || !curLocation) return;
+    // console.log(map, marker, curLocation)
 
-  //   console.log(marker)
+    console.log(marker)
 
-  //   map.setCenter(curLocation);
-  //   marker.setPosition(curLocation);
-  // }, [curLocation, map, marker]);
+    map.setCenter(curLocation);
+    marker.setPosition(curLocation);
+  }, [curLocation, map, marker]);
 
   return (<>
-    <div id={'mapElement'} ref={mapElement} style={{ minHeight: '90vh' }} />
+    <div ref={mapElement} style={{ minHeight: '90vh' }} />
     <button onClick={btn}>button</button>
   </>
   );
