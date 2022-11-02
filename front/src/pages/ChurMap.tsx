@@ -1,99 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from 'styled-components'
+import { Axios } from "../api/api";
+import { LOCATION } from "../api/url";
 import { InitModal } from "../components/InitModal";
 import { Div, maxWidth } from "../styled";
-
-const image = require(`../img/image.jpeg`)
-const dog = require(`../img/dog.jpeg`)
-
-let latitude = 37.4900016,
-  longitude = 127.0050478,
-  data = [{
-    lat: latitude + 0.002, lon: longitude, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.003, lon: longitude, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.004, lon: longitude, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.005, lon: longitude, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.006, lon: longitude, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.007, lon: longitude, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.008, lon: longitude, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-
-  {
-    lat: latitude + 0.002, lon: longitude + 0.002, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.003, lon: longitude + 0.003, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.004, lon: longitude + 0.004, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.005, lon: longitude + 0.005, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.006, lon: longitude + 0.006, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.007, lon: longitude + 0.007, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  },
-  {
-    lat: latitude + 0.008, lon: longitude + 0.008, title: '강아지',
-    icon: {
-      content: `<img class='icon' src=${dog} />`,
-    },
-  }]
-
+import { defaultImage } from "../ts/export";
+import { IGetLocation, ILatLon } from "../ts/interface";
 
 const { naver } = window;
 
@@ -101,10 +13,8 @@ export const ChurMap = () => {
   const [map, setMap] = useState<naver.maps.Map | null>(null);
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
   const [myLocation, setMyLocation] = useState<{ latitude: number; longitude: number } | string>("");
-  const [modalInfo, setModalInfo] = useState<{ x: number; y: number; _lat: number; _lng: number }>()
-  const [modal, setModal] = useState<boolean>(false)
-
-  console.log(modalInfo)
+  const [modalInfo, setModalInfo] = useState<ILatLon | naver.maps.LatLng | null>(null)
+  const [viewInfo, setViewInfo] = useState<IGetLocation | null>(null)
   // 현재 위치가 변경되는 것을 mocking
 
   useEffect(() => {
@@ -117,6 +27,28 @@ export const ChurMap = () => {
       window.alert("현재위치를 알수 없습니다.");
     }
   }, []);
+
+  const getData = (mapSet: any) => {
+    const getClickHandler = (item: any) => {
+      setViewInfo(item)
+    }
+
+    Axios.get(LOCATION).then((data: { data: { data: IGetLocation[] } }) => {
+      console.log(data)
+      data.data.data.map((item: any) => {
+        const marker = new naver.maps.Marker({
+          position: new naver.maps.LatLng(item.lat, item.lon),
+          map: mapSet,
+          title: '고양이',
+          icon: {
+            content: `<img class='icon' src=${defaultImage} />`,
+          }
+        })
+        setMarker(marker)
+        naver.maps.Event.addListener(marker, "click", () => getClickHandler(item))
+      })
+    })
+  }
 
   const successPosition = ({ coords }: any) => {
     setMyLocation({
@@ -140,6 +72,8 @@ export const ChurMap = () => {
 
     const location = new naver.maps.LatLng(coords.latitude, coords.longitude);
 
+    setModalInfo(location)
+
     const mapOptions: naver.maps.MapOptions = {
       center: location,
       zoom: 17,
@@ -148,18 +82,7 @@ export const ChurMap = () => {
     const mapSet = new naver.maps.Map('mapElement', mapOptions);
     setMap(mapSet)
 
-
-    data.map(item => {
-      const marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(item.lat, item.lon),
-        map: mapSet,
-        title: '나의 위치',
-        icon: {
-          content: `<img class='icon' src=${dog} />`,
-        }
-      })
-      setMarker(marker)
-    })
+    getData(mapSet)
 
     const markerCenter = new naver.maps.Marker({
       position: location,
@@ -169,7 +92,7 @@ export const ChurMap = () => {
     setMarker(markerCenter);
 
     naver.maps.Event.addListener(mapSet, "click", (e) => {
-      setModal(true)
+      setViewInfo(null)
       setModalInfo({
         ...e.coord
       })
@@ -182,11 +105,14 @@ export const ChurMap = () => {
 
   }
 
+  const footer = useCallback(() => {
+    if (modalInfo) return <InitModal viewInfo={viewInfo} modalInfo={modalInfo} setViewInfo={setViewInfo} />
+  }, [modalInfo, viewInfo])
+
   return (<MapForm>
     {!map && <div>loading</div>}
     <Div id={'mapElement'} style={{ height: '100vh' }} />
-
-    <InitModal setModal={setModal} motion={modal ? maxWidth < 500 ? 300 : 500 : 100} />
+    {footer()}
   </MapForm>
   );
 }
@@ -195,4 +121,5 @@ const MapForm = styled.div`
   width: 100%;
   height: 100vh;
   position: relative;
+  overflow: hidden;
 `

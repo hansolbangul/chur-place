@@ -1,36 +1,64 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from 'styled-components'
-import { Flex, maxWidth } from "../styled";
-import { BiX } from "react-icons/bi";
+import { Cancel, Flex, Img, maxWidth, Plus } from "../styled";
+import { IGetLocation, ILatLon } from "../ts/interface";
+import { defaultImage } from "../ts/export";
+import { ViewModal } from "./ViewModal";
 
 interface IModal {
-  motion: number
-  setModal: (item: boolean) => void
+  modalInfo: ILatLon | naver.maps.LatLng;
+  viewInfo: IGetLocation | null;
+  setViewInfo: (item: IGetLocation | null) => void
 }
 
-export const InitModal = ({ motion, setModal }: IModal) => {
-  return (
-    <Modal animation={motion}>
-      {motion === 100 ? <></> : <Flex justify="flex-end" margin="10px">
-        <Cancel onClick={() => setModal(false)} />
-      </Flex>}
+export const InitModal = ({ modalInfo, viewInfo, setViewInfo }: IModal) => {
+  const [modal, setModal] = useState<boolean>(false)
 
-    </Modal>
+  useEffect(() => {
+    if (viewInfo) setModal(true)
+  }, [viewInfo])
+
+  useEffect(() => {
+    if (modalInfo) setModal(false)
+  }, [modalInfo])
+
+  const viewModal = useCallback(() => {
+    return (
+      <>
+        <Footer hidden={modal} onClick={() => setModal(true)}>
+          <Plus />
+        </Footer>
+        <Modal visible={modal} height={maxWidth < 500 ? 300 : 500}>
+          <ViewModal viewInfo={viewInfo} modalInfo={modalInfo} setViewInfo={setViewInfo} setModal={setModal} />
+        </Modal>
+      </>
+    )
+  }, [modal, modalInfo, viewInfo])
+
+  return (
+    <>{viewModal()}</>
   )
 }
 
-const Cancel = styled(BiX)`
-  font-size: 35px;
-  font-weight: bold;
+const Footer = styled.div<{ hidden: boolean }>`
+  position: absolute;
+  visibility: ${props => props.hidden ? 'hidden' : 'visible'};
+  bottom: 40px;
+  right: 20px;
+  width: 70px;
+  height: 70px;
+  background-color: #FF7B54;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
-const Modal = styled.div<{ animation: number }>`
+const Modal = styled.div<{ height: number, visible: boolean }>`
   position: absolute;
-  bottom: 0;
-  width: ${maxWidth < 500 ? maxWidth : 500}px;
-  height: ${props => props.animation}px;
-  border-radius: 35px 35px 0 0;
-  background-color: #fff;
+  bottom: ${props => props.visible ? 30 : -550}px;
+  width: ${maxWidth < 500 ? maxWidth - 50 : 500}px;
+  height: ${props => props.height}px;
   left: 50%;
   transform: translate(-50%, 0);
   z-index: 9999;
@@ -39,4 +67,6 @@ const Modal = styled.div<{ animation: number }>`
 
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 `
