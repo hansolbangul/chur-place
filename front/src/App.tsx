@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
   body{
     margin: 0;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
   }
   html, body, div, span, applet, object, iframe,
   h1, h2, h3, h4, h5, h6, p, blockquote, pre,
