@@ -1,0 +1,1 @@
+export const defaultImage = require(`../img/cat-face.png`)
