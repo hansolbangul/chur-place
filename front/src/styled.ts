@@ -1,6 +1,8 @@
 import styled from 'styled-components'
-import { HiPlusSm, HiX } from "react-icons/hi";
+import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiHeart, HiOutlineBookmark, HiOutlinePhotograph } from "react-icons/hi";
+import { FiSend } from "react-icons/fi";
 export const maxWidth = window.innerWidth
+
 
 
 export const Mobile = styled.div`
@@ -26,16 +28,49 @@ export const Img = styled.img`
 
 `
 
-export const Plus = styled(HiPlusSm)`
-  color: #fff;
-  font-size: 32px;
+export const Tag = styled.div`
+
+`
+
+
+/// 아이콘
+
+export const Send = styled(FiSend) <{ fontSize?: number, marginRight?: number }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.marginRight && `margin-right: ${props.marginRight}px`};
+`
+
+export const Check = styled(HiCheck) <{ fontSize?: number, color?: string }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.color && `color: ${props.color}`};
+`
+
+export const OutlineHeart = styled(HiOutlineHeart) <{ fontSize?: number, color?: string }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.color && `color: ${props.color}`};
+`
+
+export const Heart = styled(HiHeart) <{ fontSize?: number, color?: string }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.color && `color: ${props.color}`};
+`
+
+export const Bookmark = styled(HiOutlineBookmark) <{ fontSize?: number, color?: string }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.color && `color: ${props.color}`};
+`
+
+export const Photograph = styled(HiOutlinePhotograph) <{ fontSize?: number, color?: string }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.color && `color: ${props.color}`};
 `
 
 export const Cancel = styled(HiX)`
   color: #fff;
-  font-size: 20px;
+  font-size: 32px;
 `
 
-export const Tag = styled.div`
-  
+export const Plus = styled(HiPlusSm)`
+  color: #fff;
+  font-size: 32px;
 `
