@@ -28,7 +28,7 @@ export const InitModal = ({ modalInfo, viewInfo, setViewInfo }: IModal) => {
         <Footer hidden={modal} onClick={() => setModal(true)}>
           <Plus />
         </Footer>
-        <Modal visible={modal} height={maxWidth < 500 ? 300 : 500}>
+        <Modal visible={modal} height={maxWidth < 500 ? 600 : 800}>
           <ViewModal viewInfo={viewInfo} modalInfo={modalInfo} setViewInfo={setViewInfo} setModal={setModal} />
         </Modal>
       </>
@@ -56,7 +56,7 @@ const Footer = styled.div<{ hidden: boolean }>`
 
 const Modal = styled.div<{ height: number, visible: boolean }>`
   position: absolute;
-  bottom: ${props => props.visible ? 30 : -550}px;
+  bottom: ${props => props.visible ? 30 : -850}px;
   width: ${maxWidth < 500 ? maxWidth - 50 : 500}px;
   height: ${props => props.height}px;
   left: 50%;
