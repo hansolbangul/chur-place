@@ -26,14 +26,15 @@ userRouter.get('/', async (req, res, next) => {
 userRouter.get('/:id', async (req, res, next) => {
   const cat_id = req.params.id;
 
-  query =
+  let comment_query =
     'select c.id, c.cat_id, c.comment, c.create_date, m.member_name from comment as c left join member as m on m.member_id = c.member_id where c.cat_id = ?';
 
-  const [comment] = await pool.query(query, [cat_id]);
+  let tag_query = 'select name from cat_to_tag left join tag on tag.tag_id = cat_to_tag.tag_id where cat_id = ?'
 
-  query = 'select name from cat_to_tag left join tag on tag.tag_id = cat_to_tag.tag_id where cat_id = ?'
-
-  const [tag] = await pool.query(query, [cat_id]);
+  const [[comment], [tag]] = await Promise.all([
+    pool.query(comment_query, [cat_id]),
+    pool.query(tag_query, [cat_id])
+  ])
 
   res.status(201).json(await response({ comment: comment, tag: tag }));
 });
