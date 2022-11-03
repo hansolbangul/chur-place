@@ -1,6 +1,7 @@
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import Router from './routes/Router';
+import 'swiper/swiper.min.css';
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
