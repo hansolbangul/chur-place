@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiHeart, HiOutlineBookmark, HiOutlinePhotograph } from "react-icons/hi";
+import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiHeart, HiOutlineBookmark, HiOutlinePhotograph, HiMenu, HiOutlineLightBulb } from "react-icons/hi";
 import { FiSend } from "react-icons/fi";
 export const maxWidth = window.innerWidth
 
@@ -61,6 +61,16 @@ export const Bookmark = styled(HiOutlineBookmark) <{ fontSize?: number, color?: 
 `
 
 export const Photograph = styled(HiOutlinePhotograph) <{ fontSize?: number, color?: string }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.color && `color: ${props.color}`};
+  `
+
+export const Hamburger = styled(HiMenu) <{ fontSize?: number, color?: string }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.color && `color: ${props.color}`};
+`
+
+export const Question = styled(HiOutlineLightBulb) <{ fontSize?: number, color?: string }>`
   ${props => props.fontSize && `font-size: ${props.fontSize}px`};
   ${props => props.color && `color: ${props.color}`};
 `
