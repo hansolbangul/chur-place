@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from 'styled-components'
-import { Bookmark, Cancel, Check, Flex, Img, maxWidth, OutlineHeart, Photograph, Send, Tag } from "../styled";
+import { Bookmark, Cancel, Check, Flex, Img, maxWidth, OutlineHeart, Photograph, Send, Tag, Title } from "../styled";
 import { IGetCatInfo, IGetLocation, ILatLon } from "../ts/interface";
 import { defaultImage } from "../ts/export";
 import { Axios } from "../api/api";
@@ -8,6 +8,8 @@ import { LOCATION } from "../api/url";
 import { Comments } from "./Comments";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper'
+import { CatType } from "./CatType";
+import { CatTag } from "./CatTag";
 
 const mocImage = [
   {
@@ -47,10 +49,11 @@ interface IModal {
   modalInfo: ILatLon | naver.maps.LatLng;
   viewInfo: IGetLocation | null;
   setViewInfo: (item: IGetLocation | null) => void;
+  modal: boolean;
   setModal: (item: boolean) => void
 }
 
-export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, setModal }: IModal) => {
+export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal }: IModal) => {
   const [comment, setComment] = useState<IGetCatInfo[]>([])
   const [tag, setTag] = useState<string[]>([])
 
@@ -73,7 +76,7 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, setModal }: IModal
     return (
       <PostComment>
         <Input placeholder="댓글을 입력해주세요." type={'text'} value={isComment} onChange={(e) => setIsComment(e.target.value)} />
-        <Send fontSize={20} marginRight={20} />
+        <Send fontSize={20} />
       </PostComment>
     )
   }, [isComment])
@@ -100,14 +103,16 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, setModal }: IModal
     } else {
       return (
         <>
-          <Form height={maxWidth < 500 ? 550 : 750}>
-            <CatProfile src={defaultImage} />
+          <Form none height={maxWidth < 500 ? 550 : 750}>
+            <Title>고양이 제보하기</Title>
+            <CatType modal={modal} />
+            <CatTag />
           </Form>
           {CancelBtn()}
         </>
       )
     }
-  }, [viewInfo, tag, comment, isComment])
+  }, [viewInfo, tag, comment, isComment, modal])
 
   const CancelBtn = useCallback((type?: string) => {
     return (
@@ -123,7 +128,9 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, setModal }: IModal
         </FooterMenu>
         <Btn background={'#000000'} onClick={() => {
           setModal(false)
-          if (viewInfo) setViewInfo(null)
+          if (viewInfo) {
+            setTimeout(() => { setViewInfo(null) }, 300)
+          }
         }}>
           <Cancel />
         </Btn>
@@ -176,7 +183,7 @@ const CatProfile = styled(Img)`
   height: 60px;
 `
 
-const Form = styled.div<{ height: number }>`
+const Form = styled.div<{ height: number, none?: boolean }>`
   position: relative;
   bottom: -24px;
   width: 100%;
@@ -187,7 +194,7 @@ const Form = styled.div<{ height: number }>`
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 40px 10px 10px 10px;
+  padding: ${props => props.none ? '20px 10px 10px 10px' : '40px 10px 10px 10px'};
 `
 
 const FooterBar = styled(Flex)`
