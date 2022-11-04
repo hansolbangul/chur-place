@@ -32,12 +32,19 @@ export const Tag = styled.div`
 
 `
 
+export const Title = styled.div`
+  font-size: 21px;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+`
+
 
 /// 아이콘
 
-export const Send = styled(FiSend) <{ fontSize?: number, marginRight?: number }>`
+export const Send = styled(FiSend) <{ fontSize?: number, marRight?: number }>`
   ${props => props.fontSize && `font-size: ${props.fontSize}px`};
-  ${props => props.marginRight && `margin-right: ${props.marginRight}px`};
+  margin-right: 10px;
 `
 
 export const Check = styled(HiCheck) <{ fontSize?: number, color?: string }>`
