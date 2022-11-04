@@ -83,8 +83,8 @@ const Select = styled.div`
 const Option = styled.div<{ top: number, visible: boolean }>`
   position: absolute;
   border-radius: 12px;
-  margin-top: 10px;
-  top: ${props => props.visible ? props.top * 51 : 0}px;
+  margin-top: 8px;
+  top: ${props => props.visible ? props.top * 46 : 0}px;
   /* width: 50%; */
   height: 30px;
   background-color: #fff;
