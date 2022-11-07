@@ -195,6 +195,7 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
     }
 
     setModal(false)
+    success_notify('고양이 등록 성공!')
     if (viewInfo) {
       setTimeout(() => { setViewInfo(null) }, 300)
     }
