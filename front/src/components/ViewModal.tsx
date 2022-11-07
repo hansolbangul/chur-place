@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from 'styled-components'
 import { Bookmark, Cancel, Check, Flex, Img, maxWidth, OutlineHeart, Photograph, Send, Tag, Title } from "../styled";
-import { IGetCatInfo, IGetLocation, ILatLon } from "../ts/interface";
+import { IGetCatInfo, IGetLocation, ILatLon, ISelect, ITag, IType } from "../ts/interface";
 import { defaultImage } from "../ts/export";
 import { Axios } from "../api/api";
-import { LOCATION } from "../api/url";
+import { CAT, LOCATION } from "../api/url";
 import { Comments } from "./Comments";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper'
 import { CatType } from "./CatType";
 import { CatTag } from "./CatTag";
+import { CatImage } from "./CatImage";
 
 const mocImage = [
   {
@@ -50,27 +51,51 @@ interface IModal {
   viewInfo: IGetLocation | null;
   setViewInfo: (item: IGetLocation | null) => void;
   modal: boolean;
-  setModal: (item: boolean) => void
+  setModal: (item: boolean) => void;
+  map: any;
+  setMarker: (value: any) => void
 }
 
-export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal }: IModal) => {
+export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, map, setMarker }: IModal) => {
   const [comment, setComment] = useState<IGetCatInfo[]>([])
-  const [tag, setTag] = useState<string[]>([])
+  const [catTag, setCatTag] = useState<string[]>([])
+  const [type, setType] = useState<IType[]>([])
+  const [tag, setTag] = useState<ITag[]>([])
+
+  const [selectTag, setSelectTag] = useState<number[]>([])
+  const [selectType, setSelectType] = useState<number>(0)
 
   const [isComment, setIsComment] = useState('')
 
   useEffect(() => {
     if (viewInfo) {
       const getInfo = async () => {
-        const { data: { data: { comment, tag } } } = await Axios.get(`${LOCATION}/${viewInfo.cat_id}`)
-        setComment(comment)
-        setTag(tag.map((item: { name: string }) => item.name))
+        const { data: data } = await Axios.get(`${LOCATION}/${viewInfo.cat_id}`)
+        if (data.result) {
+          const { comment: catComment, tag: catTag } = data.data
+          setComment(catComment)
+          setCatTag(catTag.length > 0 ? catTag.map((item: { name: string }) => item.name) : [])
+        }
       }
 
       getInfo()
     }
     return () => setIsComment('')
   }, [viewInfo])
+
+  useEffect(() => {
+    const getInfo = async () => {
+      const [{ data: { data: tag } },
+        { data: { data: type } }] = await Promise.all([
+          Axios.get(`${CAT}/tag`),
+          Axios.get(`${CAT}/type`)
+        ])
+      setTag(tag)
+      setType(type)
+    }
+
+    getInfo()
+  }, [])
 
   const commentInput = useCallback(() => {
     return (
@@ -88,7 +113,7 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal }:
           <Form height={maxWidth < 500 ? 550 : 750}>
             <CatProfile src={defaultImage} />
             <Type>{viewInfo?.name}</Type>
-            <TagForm>{tag.map((item, index) => <Tag key={index}>#{item}</Tag>)}</TagForm>
+            <TagForm>{catTag.map((item, index) => <Tag key={index}>#{item}</Tag>)}</TagForm>
             <SwiperImage>
               <Swiper {...settings}>
                 {mocImage.map(item => <SwiperSlide style={{ display: "flex", justifyContent: 'center' }} key={item.id}><SlideImg src={item.image} /></SwiperSlide>)}
@@ -105,14 +130,15 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal }:
         <>
           <Form none height={maxWidth < 500 ? 550 : 750}>
             <Title>고양이 제보하기</Title>
-            <CatType modal={modal} />
-            <CatTag />
+            <CatType setSelect={setSelectType} select={selectType} type={type} modal={modal} />
+            <CatTag setSelect={setSelectTag} select={selectTag} tag={tag} modal={modal} />
+            <CatImage />
           </Form>
           {CancelBtn()}
         </>
       )
     }
-  }, [viewInfo, tag, comment, isComment, modal])
+  }, [viewInfo, catTag, comment, isComment, modal, selectTag, selectType])
 
   const CancelBtn = useCallback((type?: string) => {
     return (
@@ -124,7 +150,7 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal }:
               <Bookmark fontSize={32} color={'#fff'} />
               <Photograph fontSize={32} color={'#fff'} />
             </> :
-            <Check fontSize={32} color={'#fff'} />}
+            <Check onClick={saveCat} fontSize={32} color={'#fff'} />}
         </FooterMenu>
         <Btn background={'#000000'} onClick={() => {
           setModal(false)
@@ -136,7 +162,33 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal }:
         </Btn>
       </FooterBar>
     )
-  }, [viewInfo])
+  }, [viewInfo, selectTag, selectType])
+
+  const saveCat = async () => {
+    const { data } = await Axios.post(CAT, { lat: modalInfo.y, lon: modalInfo.x, type: selectType, tag: selectTag })
+
+    if (data.result) {
+      const getClickHandler = (item: any) => {
+        setViewInfo(item)
+      }
+
+      const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(modalInfo.y, modalInfo.x),
+        map: map,
+        title: '고양이',
+        icon: {
+          content: `<img class='icon' src=${defaultImage} />`,
+        }
+      })
+      setMarker(marker)
+      naver.maps.Event.addListener(marker, "click", () => getClickHandler(data.data))
+    }
+
+    setModal(false)
+    if (viewInfo) {
+      setTimeout(() => { setViewInfo(null) }, 300)
+    }
+  }
 
   return (
     <>{ViewInit()}</>
