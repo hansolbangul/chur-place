@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from 'styled-components'
 import { Bookmark, Cancel, Check, Flex, Img, maxWidth, OutlineHeart, Photograph, Send, Tag, Title } from "../styled";
 import { IGetCatInfo, IGetLocation, ILatLon, ISelect, ITag, IType } from "../ts/interface";
-import { defaultImage } from "../ts/export";
+import { defaultImage, success_notify, warning_notify } from "../ts/export";
 import { Axios } from "../api/api";
 import { CAT, LOCATION } from "../api/url";
 import { Comments } from "./Comments";
@@ -28,7 +28,6 @@ const mocImage = [
 ]
 
 const settings = {
-  // spaceBetween: 10,
   modules: [Autoplay],
   navigation: {
     // prevEl:
@@ -42,8 +41,6 @@ const settings = {
   autoplay: {
     disableOnInteraction: false
   }
-  // touchMoveStopPropagation: true,
-  // onBeforeInit: // 이벤트 핸들러
 };
 
 interface IModal {
@@ -69,16 +66,7 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
 
   useEffect(() => {
     if (viewInfo) {
-      const getInfo = async () => {
-        const { data: data } = await Axios.get(`${LOCATION}/${viewInfo.cat_id}`)
-        if (data.result) {
-          const { comment: catComment, tag: catTag } = data.data
-          setComment(catComment)
-          setCatTag(catTag.length > 0 ? catTag.map((item: { name: string }) => item.name) : [])
-        }
-      }
-
-      getInfo()
+      getInit()
     }
     return () => setIsComment('')
   }, [viewInfo])
@@ -97,11 +85,33 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
     getInfo()
   }, [])
 
+  const getInit = async () => {
+    if (viewInfo) {
+      const { data: data } = await Axios.get(`${LOCATION}/${viewInfo.cat_id}`)
+      if (data.result) {
+        const { comment: catComment, tag: catTag } = data.data
+        setComment(catComment)
+        setCatTag(catTag.length > 0 ? catTag.map((item: { name: string }) => item.name) : [])
+      }
+    }
+  }
+
+  const postComment = async () => {
+    if (viewInfo) {
+      const { data } = await Axios.post(`${CAT}/comment/${viewInfo.cat_id}`, { comment: isComment })
+
+      if (data.result) {
+        success_notify('등록에 성공하였습니다.')
+        getInit()
+      }
+    }
+  }
+
   const commentInput = useCallback(() => {
     return (
       <PostComment>
         <Input placeholder="댓글을 입력해주세요." type={'text'} value={isComment} onChange={(e) => setIsComment(e.target.value)} />
-        <Send fontSize={20} />
+        <Send onClick={postComment} fontSize={20} />
       </PostComment>
     )
   }, [isComment])
