@@ -1,31 +1,25 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Axios } from "../api/api";
-import { CAT } from "../api/url";
 import { maxWidth, Tag } from "../styled";
-import { ITag } from "../ts/interface";
+import { ISelect, ITag } from "../ts/interface";
 import { toast, ToastContainer } from 'react-toastify';
 
-export const CatTag = () => {
-  const [tag, setTag] = useState<ITag[]>([])
-  const [select, setSelect] = useState<number[]>([])
+interface ICatT {
+  modal: boolean;
+  tag: ITag[];
+  select: number[];
+  setSelect: (value: any) => void
+}
+
+export const CatTag = ({ modal, tag, select, setSelect }: ICatT) => {
+  // const [select, setSelect] = useState<number[]>([])
 
   const notify = () => {
     toast.warning("태그는 3개만 사용 가능합니다.", {
-      autoClose: 2000,
+      autoClose: 1000,
       hideProgressBar: true,
     });
   };
-
-  useEffect(() => {
-    const getInfo = async () => {
-      // 추후에 이전 페이지에서 promise로 호출 가능
-      const { data: { data } } = await Axios.get(`${CAT}/tag`)
-      setTag(data)
-    }
-
-    getInfo()
-  }, [])
 
   const selectTag = (item: ITag) => {
     console.log(select.find(_item => _item === item.tag_id))
@@ -34,7 +28,7 @@ export const CatTag = () => {
     } else if (select.length === 3) {
       notify()
     } else {
-      setSelect(value => [...value, item.tag_id])
+      setSelect((value: any) => [...value, item.tag_id])
     }
   }
 
@@ -45,13 +39,17 @@ export const CatTag = () => {
     }
   }, [select])
 
+  useEffect(() => {
+    setSelect([])
+  }, [modal])
+
   return (
     <Column>
       <SubTitle>태그 (최대 3개)</SubTitle>
       <TagForm>
-        {tag.map(item => <TagItem onClick={() => selectTag(item)} select={select.includes(item.tag_id)} key={item.tag_id}>{item.name}</TagItem>)}
+        {tag.map(_item => <TagItem onClick={() => selectTag(_item)} select={select.includes(_item.tag_id)} key={_item.tag_id}>{_item.name}</TagItem>)}
       </TagForm>
-      <ToastAlert position="top-center" limit={1} />
+      <ToastAlert position="top-center" />
     </Column>
   )
 }

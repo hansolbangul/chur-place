@@ -1,30 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Axios } from "../api/api";
-import { CAT } from "../api/url";
 import { IType } from "../ts/interface";
 import TestImage from '../img/image.svg'
 
 interface ICatT {
   modal: boolean;
+  type: IType[];
+  select: number;
+  setSelect: (value: any) => void
 }
 
-export const CatType = ({ modal }: ICatT) => {
+export const CatType = ({ modal, type, select, setSelect }: ICatT) => {
   const addRef = useRef<any>(null)
-  const [type, setType] = useState<IType[]>([])
   const [option, setOption] = useState<boolean>(false)
-  const [select, setSelect] = useState<number>(0)
-
-  useEffect(() => {
-    const getInfo = async () => {
-      // 추후에 이전 페이지에서 promise로 호출 가능
-      const { data: { data } } = await Axios.get(`${CAT}/type`)
-      setType(data)
-      console.log(data)
-    }
-
-    getInfo()
-  }, [])
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOutside);
