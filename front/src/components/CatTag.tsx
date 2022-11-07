@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { maxWidth, Tag } from "../styled";
 import { ISelect, ITag } from "../ts/interface";
-import { toast, ToastContainer } from 'react-toastify';
+import { warning_notify } from "../ts/export";
 
 interface ICatT {
   modal: boolean;
@@ -13,20 +13,12 @@ interface ICatT {
 
 export const CatTag = ({ modal, tag, select, setSelect }: ICatT) => {
   // const [select, setSelect] = useState<number[]>([])
-
-  const notify = () => {
-    toast.warning("태그는 3개만 사용 가능합니다.", {
-      autoClose: 1000,
-      hideProgressBar: true,
-    });
-  };
-
   const selectTag = (item: ITag) => {
     console.log(select.find(_item => _item === item.tag_id))
     if (select.find(_item => _item === item.tag_id)) {
       setSelect(select.filter(_item => _item !== item.tag_id))
     } else if (select.length === 3) {
-      notify()
+      warning_notify("태그는 3개만 사용 가능합니다.")
     } else {
       setSelect((value: any) => [...value, item.tag_id])
     }
@@ -35,7 +27,7 @@ export const CatTag = ({ modal, tag, select, setSelect }: ICatT) => {
   useEffect(() => {
     if (select.length === 0) return
     else if (select.length > 3) {
-      notify()
+      warning_notify("태그는 3개만 사용 가능합니다.")
     }
   }, [select])
 
@@ -49,22 +41,9 @@ export const CatTag = ({ modal, tag, select, setSelect }: ICatT) => {
       <TagForm>
         {tag.map(_item => <TagItem onClick={() => selectTag(_item)} select={select.includes(_item.tag_id)} key={_item.tag_id}>{_item.name}</TagItem>)}
       </TagForm>
-      <ToastAlert position="top-center" />
     </Column>
   )
 }
-
-const ToastAlert = styled(ToastContainer)`
-  
-
-  @media screen and (max-width: 500px) {
-    width: ${maxWidth < 500 && 300}px;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%)
-  }
-
-`
 
 const Column = styled.div`
   position: relative;
