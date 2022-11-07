@@ -1,5 +1,5 @@
 import React from 'react';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import Router from './routes/Router';
 import 'swiper/swiper.min.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -50,8 +50,8 @@ const GlobalStyle = createGlobalStyle`
     -moz-appearance: textfield;
   }
   .icon{
-    width: 45px;
-    height: 45px;
+    width: 25px;
+    height: 25px;
   }
 `
 
