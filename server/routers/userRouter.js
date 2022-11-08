@@ -9,33 +9,51 @@ const pool = _pool();
 
 var query = '';
 
-userRouter.post('/', async (req, res, next) => {
-  const user = req.body;
-  query = 'select * from user where user_id = ?';
-  const [overlap] = await pool.query(query, [user.user_id]);
-
-  // 아이디 중복 체크
-  if (overlap.length > 0) {
+userRouter.post('/join', async (req, res, next) => {
+  const member = req.body;
+  query = 'select * from member where member_code = ?'
+  const [rows] = await pool.query(query, [member.id])
+  if (rows.length > 0) {
     return res.json(await not_response('아이디가 중복됩니다.'));
   }
 
-  query =
-    'insert into user (user_id, password) values (?, ?)';
-  const [rows] = await pool.query(query, [
-    user.user_id,
-    user.password,
-  ]);
+  query = 'insert into member (member_code, password, member_name, gender, email) values (?, SHA2(?, 224), ?, ?, ?)'
+  const data = await pool.query(query, [member.id, member.password, member.nickname, member.gender, member.email])
 
-  query =
-    "select user_id, password from user where seq = ?";
-  const [data] = await pool.query(query, [rows.insertId]);
-  console.log(data);
   if (data.length > 0) {
-    res.status(201).json(await response(data));
+    res.status(201).json(await response('회원가입 성공'))
   } else {
-    res.json(await not_found());
+    res.json(await not_found())
   }
-});
+})
+
+// userRouter.post('/', async (req, res, next) => {
+//   const user = req.body;
+//   query = 'select * from user where user_id = ?';
+//   const [overlap] = await pool.query(query, [user.user_id]);
+
+//   // 아이디 중복 체크
+//   if (overlap.length > 0) {
+//     return res.json(await not_response('아이디가 중복됩니다.'));
+//   }
+
+//   query =
+//     'insert into user (user_id, password) values (?, ?)';
+//   const [rows] = await pool.query(query, [
+//     user.user_id,
+//     user.password,
+//   ]);
+
+//   query =
+//     "select user_id, password from user where seq = ?";
+//   const [data] = await pool.query(query, [rows.insertId]);
+//   console.log(data);
+//   if (data.length > 0) {
+//     res.status(201).json(await response(data));
+//   } else {
+//     res.json(await not_found());
+//   }
+// });
 
 userRouter.get('/login', async (req, res, next) => {
   var query = 'select * from user_login';

@@ -24,7 +24,7 @@ app.use(cors(corsOptions));
 // api develop part
 app.use('/location', locationRouter);
 app.use('/cat', catRouter)
-// app.use('/user', userRouter);
+app.use('/user', userRouter);
 // app.use('/auth', authResult);
 
 // 404 Error Handling
