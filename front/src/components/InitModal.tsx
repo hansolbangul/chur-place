@@ -8,10 +8,12 @@ import { ViewModal } from "./ViewModal";
 interface IModal {
   modalInfo: ILatLon | naver.maps.LatLng;
   viewInfo: IGetLocation | null;
-  setViewInfo: (item: IGetLocation | null) => void
+  setViewInfo: (item: IGetLocation | null) => void;
+  map: any;
+  setMarker: (value: any) => void
 }
 
-export const InitModal = ({ modalInfo, viewInfo, setViewInfo }: IModal) => {
+export const InitModal = ({ modalInfo, viewInfo, setViewInfo, map, setMarker }: IModal) => {
   const [modal, setModal] = useState<boolean>(false)
 
   useEffect(() => {
@@ -26,10 +28,10 @@ export const InitModal = ({ modalInfo, viewInfo, setViewInfo }: IModal) => {
     return (
       <>
         <Footer hidden={modal} onClick={() => setModal(true)}>
-          <Plus />
+          <Plus color="#fff" fontSize={32} />
         </Footer>
         <Modal visible={modal} height={maxWidth < 500 ? 600 : 800}>
-          <ViewModal viewInfo={viewInfo} modalInfo={modalInfo} setViewInfo={setViewInfo} setModal={setModal} />
+          <ViewModal modal={modal} viewInfo={viewInfo} modalInfo={modalInfo} setViewInfo={setViewInfo} setModal={setModal} map={map} setMarker={setMarker} />
         </Modal>
       </>
     )

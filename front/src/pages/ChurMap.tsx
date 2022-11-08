@@ -106,7 +106,7 @@ export const ChurMap = () => {
   }
 
   const footer = useCallback(() => {
-    if (modalInfo) return <InitModal viewInfo={viewInfo} modalInfo={modalInfo} setViewInfo={setViewInfo} />
+    if (modalInfo) return <InitModal viewInfo={viewInfo} modalInfo={modalInfo} setViewInfo={setViewInfo} map={map} setMarker={setMarker} />
   }, [modalInfo, viewInfo])
 
   return (<MapForm>

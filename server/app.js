@@ -7,11 +7,12 @@ import authResult from './routers/authResult.js';
 import locationRouter from './routers/locationRouter.js'
 
 import { response, not_found, bad_response } from './modules/responseMSG.js';
+import catRouter from './routers/catRouter.js';
 
 const app = express();
 
 let corsOptions = {
-  origin: 'http://localhost:3008',
+  origin: ['http://localhost:3008', 'http://172.31.28.56:3008'],
   credentials: true
 }
 
@@ -22,6 +23,7 @@ app.use(cors(corsOptions));
 
 // api develop part
 app.use('/location', locationRouter);
+app.use('/cat', catRouter)
 // app.use('/user', userRouter);
 // app.use('/auth', authResult);
 

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiUser, HiKey, HiHeart, HiOutlineBookmark, HiOutlinePhotograph, HiMenu, HiOutlineLightBulb } from "react-icons/hi";
+import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiHeart, HiOutlineBookmark, HiOutlinePhotograph, HiDocumentAdd, HiUser, HiKey, HiMenu, HiOutlineLightBulb } from "react-icons/hi";
 import { FiSend } from "react-icons/fi";
 export const maxWidth = window.innerWidth
 
@@ -36,16 +36,21 @@ export const Tag = styled.div`
 
 `
 
-export const Span = styled.span`
+export const Span = styled.span``
 
+export const Title = styled.div`
+  font-size: 21px;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
 `
 
 
 /// 아이콘
 
-export const Send = styled(FiSend) <{ fontSize?: number, marginRight?: number }>`
+export const Send = styled(FiSend) <{ fontSize?: number, marRight?: number }>`
   ${props => props.fontSize && `font-size: ${props.fontSize}px`};
-  ${props => props.marginRight && `margin-right: ${props.marginRight}px`};
+  margin-right: 10px;
 `
 
 export const Check = styled(HiCheck) <{ fontSize?: number, color?: string }>`
@@ -71,7 +76,7 @@ export const Bookmark = styled(HiOutlineBookmark) <{ fontSize?: number, color?: 
 export const Photograph = styled(HiOutlinePhotograph) <{ fontSize?: number, color?: string }>`
   ${props => props.fontSize && `font-size: ${props.fontSize}px`};
   ${props => props.color && `color: ${props.color}`};
-  `
+`
 
 export const Hamburger = styled(HiMenu) <{ fontSize?: number, color?: string }>`
   ${props => props.fontSize && `font-size: ${props.fontSize}px`};
@@ -93,12 +98,17 @@ export const LoginPassword = styled(HiKey) <{ fontSize?: number, color?: string 
   ${props => props.color && `color: ${props.color}`};
 `
 
+export const DocumentAdd = styled(HiDocumentAdd) <{ fontSize?: number, color?: string }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.color && `color: ${props.color}`};
+`
+
 export const Cancel = styled(HiX)`
   color: #fff;
   font-size: 32px;
 `
 
-export const Plus = styled(HiPlusSm)`
-  color: #fff;
-  font-size: 32px;
+export const Plus = styled(HiPlusSm) <{ fontSize?: number, color?: string }>`
+  ${props => props.color && `color: ${props.color}`};
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
 `
