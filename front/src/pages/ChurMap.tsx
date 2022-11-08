@@ -5,11 +5,11 @@ import { LOCATION } from "../api/url";
 import { InitModal } from "../components/InitModal";
 import { Div, maxWidth } from "../styled";
 import { defaultImage } from "../ts/export";
-import { IGetLocation, ILatLon } from "../ts/interface";
+import { IGetLocation, IHeader, ILatLon } from "../ts/interface";
 
 const { naver } = window;
 
-export const ChurMap = () => {
+export const ChurMap = ({ menuOpen, setMenuOpen }: IHeader) => {
   const [map, setMap] = useState<naver.maps.Map | null>(null);
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
   const [myLocation, setMyLocation] = useState<{ latitude: number; longitude: number } | string>("");
@@ -84,10 +84,14 @@ export const ChurMap = () => {
 
     getData(mapSet)
 
+    const move = require(`../img/move.svg`).default
     const markerCenter = new naver.maps.Marker({
       position: location,
       map: mapSet,
       title: '신규위치',
+      icon: {
+        content: `<img class='moveIcon' src=${move} />`,
+      }
     });
     setMarker(markerCenter);
 
@@ -106,7 +110,7 @@ export const ChurMap = () => {
   }
 
   const footer = useCallback(() => {
-    if (modalInfo) return <InitModal viewInfo={viewInfo} modalInfo={modalInfo} setViewInfo={setViewInfo} map={map} setMarker={setMarker} />
+    if (modalInfo) return <InitModal menuOpen={menuOpen} setMenuOpen={setMenuOpen} viewInfo={viewInfo} modalInfo={modalInfo} setViewInfo={setViewInfo} map={map} setMarker={setMarker} />
   }, [modalInfo, viewInfo])
 
   return (<MapForm>
@@ -119,7 +123,7 @@ export const ChurMap = () => {
 
 const MapForm = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   position: relative;
   overflow: hidden;
 `

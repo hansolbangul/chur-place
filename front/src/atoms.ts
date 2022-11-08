@@ -5,16 +5,14 @@
 // recoil의 값을 수정할땐 useSetRecoilState(isDarkAtom) 로 function 을 호출해서 사용
 
 // recoil 값과 수정 둘다 하려면 useRecoilState(isDarkAtom) 를 사용 const [isDark, setIsDark] = useRecoilState(isDarkAtom)
-
+import { atom } from 'recoil';
 import { recoilPersist } from "recoil-persist"; // 리코일을 로컬 스토리지에 저장 (새로고침해도 안사라짐)
 const { persistAtom } = recoilPersist();
 
-import { atom } from 'recoil';
-
 // 로그인 시 사용될 예정 토큰, 유저아이디, 유저명 저장
 export const isLoginAtom = atom({
-  key: 'isLogin',
-  default: false,
+  key: 'isToken',
+  default: '',
   effects_UNSTABLE: [persistAtom], // 새로고침 해도 안사라짐
 });
 

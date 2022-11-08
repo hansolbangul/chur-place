@@ -32,3 +32,8 @@ export interface IImg {
   cat_id: number;
   path: string
 }
+
+export interface IHeader {
+  menuOpen: boolean;
+  setMenuOpen: (item: any) => void
+}

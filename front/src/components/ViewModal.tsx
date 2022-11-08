@@ -39,7 +39,6 @@ interface IModal {
 }
 
 export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, map, setMarker }: IModal) => {
-  const imageInput = useRef<HTMLInputElement>(null)
   const [comment, setComment] = useState<IGetCatInfo[]>([])
   const [catTag, setCatTag] = useState<string[]>([])
   const [type, setType] = useState<IType[]>([])
@@ -62,13 +61,18 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
       getInit()
     }
     return () => {
-      setIsComment('')
-      setSelectType(0)
-      setSelectTag([])
-      setImageList([])
-      setInputView(false)
+
     }
   }, [viewInfo])
+
+  useEffect(() => {
+    setIsComment('')
+    setSelectType(0)
+    setSelectTag([])
+    setImage([])
+    setImageList([])
+    setInputView(false)
+  }, [modal])
 
   useEffect(() => {
     const getInfo = async () => {
@@ -129,50 +133,6 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
     )
   }, [isComment])
 
-  const ViewInit = useCallback(() => {
-    if (viewInfo) {
-      return (
-        <>
-          <Form height={maxWidth < 500 ? 550 : 750}>
-            <CatProfile src={require(`../img/type_${viewInfo.type_id}.svg`)} />
-            <TagForm>{catTag.map((item, index) => <Tag key={index}>#{item}</Tag>)}</TagForm>
-            <SwiperImage>
-              <Swiper {...settings}>
-                {image.map((item, index) => {
-                  return <SwiperSlide style={{ display: "flex", justifyContent: 'center' }} key={index}><SlideImg src={require('../uploads/' + item.path)} /></SwiperSlide>
-                })}
-                <SwiperSlide style={{ display: "flex", justifyContent: 'center', height: '100%' }}>
-                  <AddImg onClick={() => setInputView(item => !item)}>{inputView ?
-                    <Flex style={{ flexDirection: 'column', rowGap: '8px', width: '100%' }}>
-                      <CatImage imageList={imageList} setImageList={setImageList} />
-                      <ImgAddBtn onClick={addImg}>저장</ ImgAddBtn>
-                    </Flex> : <Flex style={{ height: '200px' }} justify='center' align="center">이미지 추가하기</Flex>}
-                  </AddImg>
-                </SwiperSlide>
-              </Swiper>
-
-            </SwiperImage>
-            {commentInput()}
-            <CommentForm>{comment.map(item => <Comments key={item.id} comment={item}></Comments>)}</CommentForm>
-          </Form>
-          {CancelBtn('view')}
-        </>
-      )
-    } else {
-      return (
-        <>
-          <Form none height={maxWidth < 500 ? 550 : 750}>
-            <Title>고양이 제보하기</Title>
-            <CatType setSelect={setSelectType} select={selectType} type={type} />
-            <CatTag setSelect={setSelectTag} select={selectTag} tag={tag} />
-            <CatImage imageList={imageList} setImageList={setImageList} />
-          </Form>
-          {CancelBtn()}
-        </>
-      )
-    }
-  }, [viewInfo, catTag, comment, isComment, modal, selectTag, selectType, heart, like, imageList, image, inputView])
-
   const HeartBtn = useCallback(() => {
     const postHeart = async () => {
       const { data } = await Axios.patch(`${HEART}`, { cat_id: viewInfo?.cat_id })
@@ -224,7 +184,6 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
   }, [viewInfo, selectTag, selectType, heart, like, imageList])
 
   const postImages = async (id: number) => {
-    console.log(imageList)
     const formData = new FormData();
     Array.from({ length: Object.keys(imageList).length }).map((_, index) => {
       formData.append('img', imageList[index]);
@@ -250,6 +209,11 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
   }
 
   const saveCat = async () => {
+    if (selectType === 0 || selectTag.length === 0) {
+      warning_notify('타입과 태그는 필수입니다.')
+      return
+    }
+
     const { data } = await Axios.post(CAT, { lat: modalInfo.y, lon: modalInfo.x, type: selectType, tag: selectTag })
 
     try {
@@ -288,118 +252,151 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
   }
 
   return (
-    <>{ViewInit()}</>
+    // <>{ViewInit()}</>
+    <>{viewInfo ? <>
+      <Form maxHeight={550}>
+        <CatProfile src={require(`../img/type_${viewInfo.type_id}.svg`)} />
+        <TagForm>{catTag.map((item, index) => <Tag key={index}>#{item}</Tag>)}</TagForm>
+        <SwiperImage>
+          <Swiper {...settings}>
+            {image.map((item, index) => {
+              return <SwiperSlide style={{ display: "flex", justifyContent: 'center' }} key={index}><SlideImg src={item.path} /></SwiperSlide>
+            })}
+            <SwiperSlide style={{ display: "flex", justifyContent: 'center', height: '100%' }}>
+              <AddImg onClick={() => setInputView(item => !item)}>{inputView ?
+                <Flex style={{ flexDirection: 'column', rowGap: '8px', width: '100%' }}>
+                  <CatImage imageList={imageList} setImageList={setImageList} />
+                  <ImgAddBtn onClick={addImg}>저장</ ImgAddBtn>
+                </Flex> : <Flex style={{ height: '200px' }} justify='center' align="center">이미지 추가하기</Flex>}
+              </AddImg>
+            </SwiperSlide>
+          </Swiper>
+
+        </SwiperImage>
+        {commentInput()}
+        <CommentForm>{comment.map(item => <Comments key={item.id} comment={item}></Comments>)}</CommentForm>
+      </Form>
+      {CancelBtn('view')}
+    </> : <>
+      <Form none maxHeight={550}>
+        <Title>고양이 제보하기</Title>
+        <CatType setSelect={setSelectType} select={selectType} type={type} />
+        <CatTag setSelect={setSelectTag} select={selectTag} tag={tag} />
+        <CatImage imageList={imageList} setImageList={setImageList} />
+      </Form>
+      {CancelBtn()}</>
+    }</>
   )
 }
 
 const ImgAddBtn = styled.button`
-  background-color: #FF7B54;
-  width: 100%;
-  border: none;
-  border-radius: 12px;
-  padding: 4px;
-`
+      background-color: #FF7B54;
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 4px;
+      `
 
 const SlideImg = styled(Img)`
-  border-radius: 10px;
-  height: 200px;
-`
+      border-radius: 10px;
+      height: 200px;
+      `
 
 const SwiperImage = styled.div`
-  width: 100%;
-  height: 200px;
-  margin-bottom: 10px;
-`
+      width: 100%;
+      height: 200px;
+      margin-bottom: 10px;
+      `
 
 const CommentForm = styled.div`
-  width: 100%;
-  max-height: 180px;
-  overflow: scroll;
-`
+      width: 100%;
+      max-height: 180px;
+      overflow: scroll;
+      `
 
 const TagForm = styled.div`
-  display: flex;
-  column-gap: 4px;
-  color: #FF7B54;
-  margin-bottom: 10px;
-`
+      display: flex;
+      column-gap: 4px;
+      color: #FF7B54;
+      margin-bottom: 10px;
+      `
 
 const CatProfile = styled(Img)`
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  width: 60px;
-  height: 60px;
-`
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 60px;
+      height: 60px;
+      `
 
-const Form = styled.div<{ height: number, none?: boolean }>`
-  position: relative;
-  bottom: -24px;
-  width: 100%;
-  height: ${props => props.height}px;
-  max-height: ${props => props.height}px;
-  border-radius: 20px;
-  background-color: #fff;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: ${props => props.none ? '20px 10px 10px 10px' : '40px 10px 10px 10px'};
-`
+const Form = styled.div<{ maxHeight: number, none?: boolean }>`
+      position: relative;
+      bottom: -24px;
+      width: 100%;
+      height: ${props => props.maxHeight}px;
+      max-height: ${props => props.maxHeight}px;
+      border-radius: 20px;
+      background-color: #fff;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: ${props => props.none ? '20px 10px 10px 10px' : '40px 10px 10px 10px'};
+      `
 
 const FooterBar = styled(Flex)`
-  justify-content: center;
-  column-gap: 20px;
-  width: 100%;
-  z-index: 100;
-`
+      justify-content: center;
+      column-gap: 20px;
+      width: 100%;
+      z-index: 100;
+      `
 
 const FooterMenu = styled.div`
-  width: 156px;
-  display: flex;
-  justify-content: space-evenly;
-  background-color: #FF7B54;
-  border-radius: 12px;
-  align-items: center;
+      width: 156px;
+      display: flex;
+      justify-content: space-evenly;
+      background-color: #FF7B54;
+      border-radius: 12px;
+      align-items: center;
 
-`
+      `
 
 const Btn = styled.div<{ background: string }>`
-  width: 52px;
-  background-color: ${props => props.background};
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+      width: 52px;
+      background-color: ${props => props.background};
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-  transition: .4s all ease-in;
-`
+      transition: .4s all ease-in;
+      `
 
 const PostComment = styled.div`
-  width: 100%;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  border: 1px solid black;
-  border-radius: 12px;
-  margin-bottom: 10px;
-`
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      border: 1px solid black;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      `
 
 const Input = styled.input`
-  margin: 0 20px;
-  flex: 1 1 auto;
-  border: none;
-`
+      margin: 0 20px;
+      flex: 1 1 auto;
+      border: none;
+      `
 
 const AddImg = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px dashed gray;
-  border-radius: 12px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px dashed gray;
+      border-radius: 12px;
 
-  cursor: pointer;
-`
+      cursor: pointer;
+      `

@@ -1,20 +1,30 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { Axios } from "../api/api";
+import { AUTH } from "../api/url";
+import { isLoginAtom } from "../atoms";
 import { bold, Cancel, Div, Flex, LoginPassword, LoginUser, mainTheme, maxWidth, Span, subTheme } from "../styled";
+import { success_notify, warning_notify } from "../ts/export";
 
 interface ILogin {
   setOpen: (ele: boolean) => void;
   setNext: (ele: boolean) => void;
 }
 
+interface IBoolean {
+  id: boolean;
+  password: boolean;
+}
+
 export const Login = ({ setOpen, setNext }: ILogin) => {
+  const [isToken, setIsToken] = useRecoilState(isLoginAtom)
   const usernameRef = useRef<any>(null)
   const passwordRef = useRef<any>(null)
   const [loginData, setLoginData] = useState<{ id: string, password: string }>({ id: '', password: '' })
-  const [isFocus, setIsFocus] = useState<{ id: boolean, password: boolean }>({ id: false, password: false })
-  const [isAlert, setIsAlert] = useState<{ id: boolean, password: boolean }>({ id: false, password: false })
+  const [isFocus, setIsFocus] = useState<IBoolean>({ id: false, password: false })
+  const [isAlert, setIsAlert] = useState<IBoolean>({ id: false, password: false })
 
   useEffect(() => {
     idClick()
@@ -42,7 +52,22 @@ export const Login = ({ setOpen, setNext }: ILogin) => {
   }
 
   const loginBtn = async () => {
-    // TODO api connect
+    // TODO api connect 
+    if (loginData.id === '' || loginData.password === '') {
+      warning_notify('아이디, 비밀번호를 입력해주세요.')
+      return
+    }
+    const { data } = await Axios.post(`${AUTH}/login`, { member_id: loginData.id, password: loginData.password })
+
+    console.log(data)
+    if (data.result) {
+      console.log(data)
+      success_notify(data.data.name + ' 님 환영합니다.')
+      setIsToken(data.data.token)
+      Axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`
+
+      setOpen(false)
+    }
   }
 
   return (

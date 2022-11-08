@@ -1,13 +1,17 @@
 // webpack.config.js
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.ts", // 번들링 시작 위치
-  output: {
-    path: path.join(__dirname, "/dist"), // 번들 결과물 위치
-    filename: "bundle.js",
-  },
+  // entry: "./src/index.tsx", // 번들링 시작 위치
+  // output: {
+  //   path: path.join(__dirname, "/dist"), // 번들 결과물 위치
+  //   filename: "bundle.js",
+  // },
+  entry: "./src/index.tsx",
+  // output: {
+  //   path: path.join(__dirname, "/dist"),
+  //   filename: "[name].js",
+  // },
   module: {
     rules: [
       {
@@ -18,7 +22,7 @@ module.exports = {
         },
       },
       {
-        test: /\.ts$/, // .ts 에 한하여 ts-loader를 이용하여 transpiling
+        test: /\.tsx$/, // .ts 에 한하여 ts-loader를 이용하여 transpiling
         exclude: /node_module/,
         use: {
           loader: "ts-loader",
@@ -30,20 +34,14 @@ module.exports = {
           loader: 'file-loader',
         },
       },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
     ],
   },
   resolve: {
     modules: [path.join(__dirname, "src"), "node_modules"], // 모듈 위치
-    extensions: [".ts", ".js"],
+    extensions: [".js", ".jsx", ".ts", ".tsx", '.css'],
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "./src/index.html", // 템플릿 위치
-    }),
-  ],
-  devServer: {
-    host: "localhost", // live-server host 및 port
-    port: 5500,
-  },
-  mode: "development", // 번들링 모드 development / production
 };

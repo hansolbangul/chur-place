@@ -1,13 +1,15 @@
+import React from "react";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { isLoginAtom } from "../atoms";
 import { bold, Div, Flex, Hamburger, mainTheme, Question } from "../styled";
+import { IHeader } from "../ts/interface";
 import { Join } from "./Join";
 import { Login } from "./Login";
+import { LoginForm } from "./LoginForm";
 
-export const Header = () => {
-  const [menuOpen, setMenuOpen] = useState<boolean>(false)
+export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
   const [useInfo, setUseInfo] = useState<boolean>(false)
   const [loginOpen, setLoginOpen] = useState<boolean>(false)
   const [joinOpen, setJoinOpen] = useState<boolean>(false)
@@ -35,12 +37,11 @@ export const Header = () => {
 
   return (
     <>
-      {loginOpen && <Login setOpen={setLoginOpen} setNext={setJoinOpen} />}
-      {joinOpen && <Join setOpen={setJoinOpen} />}
+      <LoginForm loginOpen={loginOpen} joinOpen={joinOpen} setLoginOpen={setLoginOpen} setJoinOpen={setJoinOpen} />
       <Container justify="space-between" align="center">
         {useInfo && <Information />}
         <Div style={{ position: 'relative' }}>
-          <Circle onClick={() => setMenuOpen((ele: any) => !ele)} justify="center" align="center">
+          <Circle onClick={() => setMenuOpen((ele: boolean) => !ele)} justify="center" align="center">
             <Hamburger fontSize={24} />
           </Circle>
           {menuOpen && <Menu onClick={loginBtn}>로그인하기</Menu>}

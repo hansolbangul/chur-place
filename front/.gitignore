@@ -24,6 +24,4 @@ yarn-error.log*
 
 .env
 
-/public/index.html
-
 /src/uploads

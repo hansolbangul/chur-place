@@ -3,13 +3,13 @@ import authUtil from '../modules/auth.js';
 
 import { response, not_found, bad_response, not_response } from '../modules/responseMSG.js';
 
-const userRouter = express.Router();
+const locationRouter = express.Router();
 import _pool from '../modules/database.js';
 const pool = _pool();
 
 let query = '';
 
-userRouter.get('/', async (req, res, next) => {
+locationRouter.get('/', async (req, res, next) => {
   console.log('user');
 
   query =
@@ -23,7 +23,7 @@ userRouter.get('/', async (req, res, next) => {
   }
 });
 
-userRouter.get('/:id', async (req, res, next) => {
+locationRouter.get('/:id', async (req, res, next) => {
   const cat_id = req.params.id;
 
   let comment_query =
@@ -42,4 +42,4 @@ userRouter.get('/:id', async (req, res, next) => {
   res.status(201).json(await response({ comment: comment, tag: tag, img: img }));
 });
 
-export default userRouter;
+export default locationRouter;

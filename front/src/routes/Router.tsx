@@ -8,13 +8,14 @@ import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 
 function Router() {
+  const [menuOpen, setMenuOpen] = useState<boolean>(false)
 
   return (
     <BrowserRouter>
       <Mobile>
-        <Header />
+        <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
         <Routes>
-          <Route path="/nmap" element={<ChurMap />}></Route>
+          <Route path="/nmap" element={<ChurMap menuOpen={menuOpen} setMenuOpen={setMenuOpen} />}></Route>
         </Routes>
         <ToastAlert position="top-center" />
       </Mobile>

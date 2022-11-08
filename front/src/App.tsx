@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Router from './routes/Router';
 import 'swiper/swiper.min.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRecoilState } from 'recoil';
+import { isLoginAtom } from './atoms';
+import { Axios } from './api/api';
+import { AUTH } from './api/url';
+import { success_notify, warning_notify } from './ts/export';
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -52,9 +57,48 @@ const GlobalStyle = createGlobalStyle`
     width: 25px;
     height: 25px;
   }
+  .moveIcon{
+    width: 30px;
+    height: 30px;
+  }
 `
 
 function App() {
+  const [isToken, setIsToken] = useRecoilState(isLoginAtom)
+
+  // 모바일 환경 아래 툴바 같은게 있는데, 해당 툴바 계산
+  function setScreenSize() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`); //"--vh"라는 속성으로 정의해준다.
+  }
+
+  useEffect(() => {
+    if (isToken && isToken !== '') {
+      Axios.defaults.headers.common['Authorization'] = `Bearer ${isToken}`
+      tokenAccess()
+    }
+
+    setScreenSize();
+    // 리사이징때마다 툴바 계산
+    window.addEventListener('resize', () => setScreenSize());
+  }, []);
+
+  const tokenAccess = async () => {
+    const { data } = await Axios.post(`${AUTH}/me`)
+    // 토큰 만로 || 토큰 이상? 시 리프레시
+    if (data.result) {
+      success_notify(data.data.name + ' 님 재방문 환영합니다.')
+    } else {
+      const { data: refresh } = await Axios.post(`${AUTH}/refresh`)
+      if (refresh.result) {
+        Axios.defaults.headers.common['Authorization'] = `Bearer ${refresh.data.token}`
+        setIsToken(refresh.data.token)
+      } else {
+        warning_notify('리프레시 실패..')
+      }
+    }
+  }
+
   return (
     <>
       <GlobalStyle />
