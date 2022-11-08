@@ -14,33 +14,34 @@ var query = '';
 authResult.post('/login', async (req, res, next) => {
   const authBody = req.body;
 
-  query = 'select * from user where user_id = ? and password = ?';
+  query = 'select * from member where member_code = ? and password = SHA2(?, 224)';
   const [data] = await pool.query(query, [authBody.user_id, authBody.password]);
-  const token = await sign(data[0].user_id);
+  const token = await sign(data[0].member_id, data[0].member_name, data[0].member_code);
   if (data.length > 0) {
-    res.status(201).json(await response(token.token));
+    res.status(201).json(await response({ token: token.token, name: data[0].member_name }));
   } else {
     res.json(await not_found());
   }
 });
 
 authResult.post('/me', authUtil.checkToken, async (req, res, next) => {
-  var token = req.headers.token;
+  var token = req.headers.authorization.split('Bearer ')[1];
   const user = await verify(token);
-  if (user.user) {
-    res.status(201).json(await response({ user_id: user.user, iat: user.iat, exp: user.exp }));
+  console.log(user)
+  if (user.id) {
+    res.status(201).json(await response({ member_id: user.id, name: user.name, code: user.code, iat: user.iat, exp: user.exp }));
   } else {
     res.json(await not_found());
   }
 });
 
 authResult.post('/refresh', authUtil.checkToken, async (req, res, next) => {
-  var oldToken = req.headers.token;
+  var oldToken = req.headers.authorization.split('Bearer ')[1];
   const oldUser = await verify(oldToken);
-  const token = await sign(oldUser.user);
+  const token = await sign(oldUser.id, oldUser.name, oldUser.code);
   const user = await verify(token.token);
-  if (user.user) {
-    res.status(201).json(await response({ user_id: user.user, iat: user.iat, exp: user.exp }));
+  if (user.id) {
+    res.status(201).json(await response({ member_id: user.id, name: user.name, code: user.code, iat: user.iat, exp: user.exp, token: token.token }));
   } else {
     res.json(await not_found());
   }

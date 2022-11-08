@@ -7,12 +7,12 @@ import { secretKey, options } from '../config/secretKey.js';
 const TOKEN_EXPIRED = -3;
 const TOKEN_INVALID = -2;
 
-export async function sign(user) {
+export async function sign(id, name, code) {
   /* 현재는 idx와 email을 payload로 넣었지만 필요한 값을 넣으면 됨! */
   const payload = {
-    user: user,
-    // idx: user.userIdx,
-    // email: user.email,
+    id: id,
+    name: name,
+    code: code,
   };
   const result = {
     //sign메소드를 통해 access token 발급!

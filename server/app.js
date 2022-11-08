@@ -37,7 +37,7 @@ app.use('/cat', catRouter)
 app.use('/heart', heartRouter)
 app.use('/like', likeRouter)
 app.use('/user', userRouter);
-// app.use('/auth', authResult);
+app.use('/auth', authResult);
 
 // 404 Error Handling
 app.use(async (req, res, next) => {

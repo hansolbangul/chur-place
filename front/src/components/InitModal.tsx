@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from 'styled-components'
 import { Cancel, Flex, Img, maxWidth, Plus } from "../styled";
-import { IGetLocation, ILatLon } from "../ts/interface";
-import { defaultImage } from "../ts/export";
+import { IGetLocation, IHeader, ILatLon } from "../ts/interface";
+import { defaultImage, warning_notify } from "../ts/export";
 import { ViewModal } from "./ViewModal";
+import { useRecoilState } from "recoil";
+import { isLoginAtom } from "../atoms";
+import { LoginForm } from "./LoginForm";
 
-interface IModal {
+interface IModal extends IHeader {
   modalInfo: ILatLon | naver.maps.LatLng;
   viewInfo: IGetLocation | null;
   setViewInfo: (item: IGetLocation | null) => void;
@@ -13,8 +16,9 @@ interface IModal {
   setMarker: (value: any) => void
 }
 
-export const InitModal = ({ modalInfo, viewInfo, setViewInfo, map, setMarker }: IModal) => {
+export const InitModal = ({ setMenuOpen, modalInfo, viewInfo, setViewInfo, map, setMarker }: IModal) => {
   const [modal, setModal] = useState<boolean>(false)
+  const [isToken, setIsToken] = useRecoilState(isLoginAtom)
 
   useEffect(() => {
     if (viewInfo) setModal(true)
@@ -24,10 +28,19 @@ export const InitModal = ({ modalInfo, viewInfo, setViewInfo, map, setMarker }: 
     if (modalInfo) setModal(false)
   }, [modalInfo])
 
+  const loginCheck = () => {
+    if (isToken === '') {
+      warning_notify('로그인이 필요합니다.')
+      setMenuOpen(true)
+      return
+    }
+    setModal(true)
+  }
+
   const viewModal = useCallback(() => {
     return (
       <>
-        <Footer hidden={modal} onClick={() => setModal(true)}>
+        <Footer hidden={modal} onClick={() => loginCheck()}>
           <Plus color="#fff" fontSize={32} />
         </Footer>
         <Modal visible={modal} maxHeight={600}>
