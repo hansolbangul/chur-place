@@ -2,11 +2,29 @@ import React from "react";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Axios } from "../api/api";
-import { bold, Div, Flex, mainTheme, maxWidth, Span, subTheme, Cancel } from "../styled";
+import { bold, Flex, mainTheme, maxWidth, Span, subTheme, Cancel } from "../styled";
 import { success_notify, warning_notify } from "../ts/export";
 
 interface IJoin {
   setOpen: (ele: boolean) => void;
+}
+
+interface IForm {
+  id: string,
+  email: string,
+  nickname: string,
+  gender: number,
+  password: string,
+  passwordConfirm?: string
+}
+
+interface IBool {
+  id: boolean,
+  email: boolean,
+  nickname: boolean,
+  gender: boolean,
+  password: boolean,
+  passwordConfirm: boolean
 }
 
 export const Join = ({ setOpen }: IJoin) => {
@@ -15,9 +33,9 @@ export const Join = ({ setOpen }: IJoin) => {
   const nicknameRef = useRef<any>(null)
   const passwordRef = useRef<any>(null)
   const passwordConfirmRef = useRef<any>(null)
-  const [joinData, setJoinData] = useState<{ id: string, email: string, nickname: string, gender: number, password: string, passwordConfirm?: string }>({ id: '', email: '', nickname: '', gender: 1, password: '', passwordConfirm: '' })
-  const [isFocus, setIsFocus] = useState<{ id: boolean, email: boolean, nickname: boolean, gender: boolean, password: boolean, passwordConfirm: boolean }>({ id: false, email: false, nickname: false, gender: false, password: false, passwordConfirm: false })
-  const [isAlert, setIsAlert] = useState<{ id: boolean, email: boolean, nickname: boolean, gender: boolean, password: boolean, passwordConfirm: boolean }>({ id: false, email: false, nickname: false, gender: false, password: false, passwordConfirm: false })
+  const [joinData, setJoinData] = useState<IForm>({ id: '', email: '', nickname: '', gender: 1, password: '', passwordConfirm: '' })
+  const [isFocus, setIsFocus] = useState<IBool>({ id: false, email: false, nickname: false, gender: false, password: false, passwordConfirm: false })
+  const [isAlert, setIsAlert] = useState<IBool>({ id: false, email: false, nickname: false, gender: false, password: false, passwordConfirm: false })
 
   useEffect(() => {
     idClick()
@@ -79,7 +97,10 @@ export const Join = ({ setOpen }: IJoin) => {
   }
 
   useEffect(() => {
-    if (joinData.password !== joinData.passwordConfirm && joinData.passwordConfirm !== '') setIsAlert(ele => ({ ...ele, passwordConfirm: true }))
+    if (joinData.password !== joinData.passwordConfirm && joinData.passwordConfirm !== '') {
+      setIsAlert(ele => ({ ...ele, passwordConfirm: true }))
+      warning_notify('비밀번호가 일치하지 않습니다.')
+    }
     else setIsAlert(ele => ({ ...ele, passwordConfirm: false }))
   }, [joinData.password, joinData.passwordConfirm])
 
