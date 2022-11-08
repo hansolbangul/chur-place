@@ -5,17 +5,16 @@ import 'swiper/swiper.min.css';
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
-    font-family: 'GmarketSansMedium';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+     font-family: 'S-CoreDream-4Regular';
+     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');
+     font-weight: normal;
+     font-style: normal;
   }
-
   @font-face {
-    font-family: 'GmarketSansBold';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+     font-family: 'S-CoreDream-6Bold';
+     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff');
+     font-weight: normal;
+     font-style: normal;
   }
   body{
     margin: 0;
@@ -35,7 +34,7 @@ const GlobalStyle = createGlobalStyle`
   figure, figcaption, footer, header, hgroup,
   main, menu, nav, output, ruby, section, summary,
   time, mark, audio, video {
-    font-family: GmarketSansMedium;
+    font-family: S-CoreDream-4Regular;
     font-size: 12px;
   }
   /* Chrome, Safari, Edge, Opera */
