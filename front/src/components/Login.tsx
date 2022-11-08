@@ -57,8 +57,9 @@ export const Login = ({ setOpen, setNext }: ILogin) => {
       warning_notify('아이디, 비밀번호를 입력해주세요.')
       return
     }
+    const { data } = await Axios.post(`${AUTH}/login`, { member_id: loginData.id, password: loginData.password })
 
-    const { data } = await Axios.post(`${AUTH}/login`, { user_id: loginData.id, password: loginData.password })
+    console.log(data)
     if (data.result) {
       console.log(data)
       success_notify(data.data.name + ' 님 환영합니다.')
