@@ -1,49 +1,34 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
+    "target": "es6",
     "module": "esnext",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+    "noResolve": false,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "sourceMap": true,
+    "allowJs": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "keyofStringsOnly": true
   },
-  "include": [
-    "src",
-    "src/custom.d.ts"
+  "typeRoots": [
+    "node_modules/@types",
+    "src/@type"
   ],
-  "plugins": [
-    {
-      "name": "typescript-styled-plugin",
-      "lint": {
-        "validProperties": [
-          "aspect-ratio",
-          "elevation",
-          "margin-vertical",
-          "margin-horizontal",
-          "padding-horizontal",
-          "padding-vertical",
-          "resize-mode",
-          "shadow-color",
-          "shadow-opacity",
-          "shadow-offset",
-          "shadow-radius",
-          "text-align-vertical",
-          "tint-color"
-        ]
-      }
-    }
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src/setupTests.ts",
+    "./node_modules/**/*"
+  ],
+  "include": [
+    "./src/**/*",
+    "@type",
+    "./src/custom.d.ts"
   ]
 }

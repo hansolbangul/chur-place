@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { bold, Div, Flex, mainTheme, maxWidth, subTheme } from "../styled";
