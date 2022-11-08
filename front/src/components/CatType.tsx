@@ -4,13 +4,12 @@ import { IType } from "../ts/interface";
 import TestImage from '../img/image.svg'
 
 interface ICatT {
-  modal: boolean;
   type: IType[];
   select: number;
   setSelect: (value: any) => void
 }
 
-export const CatType = ({ modal, type, select, setSelect }: ICatT) => {
+export const CatType = ({ type, select, setSelect }: ICatT) => {
   const addRef = useRef<any>(null)
   const [option, setOption] = useState<boolean>(false)
 
@@ -21,10 +20,6 @@ export const CatType = ({ modal, type, select, setSelect }: ICatT) => {
     };
   }, [option])
 
-  useEffect(() => {
-    setSelect(0)
-  }, [modal])
-
   const handleOutside = (e: any) => {
     // current.contains(e.target) : 컴포넌트 특정 영역 외 클릭 감지를 위해 사용
     if (option && addRef.current && !addRef.current.contains(e.target)) {
@@ -34,12 +29,12 @@ export const CatType = ({ modal, type, select, setSelect }: ICatT) => {
 
   return (
     <Column ref={addRef}>
-      <Select onClick={() => setOption(item => !item)}>{select !== 0 && <img src={TestImage} />} {select === 0 ? '종류를 선택해주세요.' : type.find(item => item.type_id === select)?.name}</Select>
+      <Select onClick={() => setOption(item => !item)}>{select !== 0 && <img className="icon" src={require(`../img/type_${select}.svg`)} />} {select === 0 ? '종류를 선택해주세요.' : type.find(item => item.type_id === select)?.name}</Select>
       {type.map(item => <Option onClick={() => {
         setSelect(item.type_id)
         setOption(false)
       }} visible={option} top={item.type_id} key={item.type_id}>
-        <img src={TestImage} />{item.name}</Option>)
+        <img className="icon" src={require(`../img/type_${item.type_id}.svg`)} />{item.name}</Option>)
       }
     </Column >
   )
