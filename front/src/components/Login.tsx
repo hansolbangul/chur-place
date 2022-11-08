@@ -1,6 +1,8 @@
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { bold, Div, Flex, LoginPassword, LoginUser, mainTheme, maxWidth, Span, subTheme } from "../styled";
+import { Axios } from "../api/api";
+import { bold, Cancel, Div, Flex, LoginPassword, LoginUser, mainTheme, maxWidth, Span, subTheme } from "../styled";
 
 interface ILogin {
   setOpen: (ele: boolean) => void;
@@ -39,13 +41,13 @@ export const Login = ({ setOpen, setNext }: ILogin) => {
     setIsFocus({ id: false, password: false })
   }
 
-  const loginBtn = () => {
+  const loginBtn = async () => {
     // TODO api connect
   }
 
   return (
     <Background onClick={() => setOpen(false)}>
-      <Modal onClick={(e: any) => e.stopPropagation()} width={maxWidth}>
+      <Modal onClick={(e: any) => e.stopPropagation()}>
         <InputContainer onBlur={idBlur} onClick={idClick} click={isFocus.id} alert={isAlert.id}>
           <LoginUser style={{ position: 'absolute', top: '28px', left: '16px' }} fontSize={20} color={subTheme} />
           <Text>id</Text>
@@ -57,14 +59,24 @@ export const Login = ({ setOpen, setNext }: ILogin) => {
           <Input value={loginData.password} onChange={(e: any) => setLoginData({ id: loginData.id, password: e.target.value })} ref={passwordRef} width={maxWidth} type='password' />
         </InputContainer>
         <Flex justify="center" align="center" style={{ position: 'absolute', bottom: '-24px', left: '50%', transform: 'translate(-50%, 0)' }}>
-          <Button onClick={loginBtn}>Login</Button>
-          <Div onClick={() => setOpen(false)} style={{ lineHeight: '48px', width: '52px', height: '48px', border: 'none', borderRadius: '12px', backgroundColor: '#000', color: '#fff' }}>X</Div>
+          <Button onClick={loginBtn}>로그인</Button>
+          <CancelBtn onClick={() => setOpen(false)} justify='center' align='center'>
+            <Cancel />
+          </CancelBtn>
         </Flex>
         <Span onClick={() => { setNext(true); setOpen(false); }} style={{ color: subTheme, float: 'right' }}>회원가입</Span>
       </Modal>
     </Background >
   )
 }
+
+const CancelBtn = styled(Flex)`
+  width: 52px;
+  height: 48px; 
+  border: none;
+  border-radius: 12px;
+  background-color: #000;
+`
 
 const InputContainer = styled.div<{ click: boolean, alert: boolean }>`
   position: relative;
@@ -104,13 +116,14 @@ const Button = styled.button`
   background-color: ${mainTheme};
   box-shadow: 0px 4px 4px 1px rgba(0, 0, 0, 0.15);
   color: #fff;
+  font-family: ${bold};
   /* bottom: -24px;
   left: 50%;
   transform: translate(-50%, 0); */
 `
 
-const Modal = styled.div<{ width: number }>`
-  width: ${props => props.width > 500 ? '500px' : '284px'};
+const Modal = styled.div`
+  width: 284px;
   background-color: #fff;
   border-radius: 18px;
   position: absolute;
