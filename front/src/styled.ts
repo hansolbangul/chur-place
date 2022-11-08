@@ -1,8 +1,12 @@
 import styled from 'styled-components'
-import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiHeart, HiOutlineBookmark, HiOutlinePhotograph, HiMenu, HiOutlineLightBulb } from "react-icons/hi";
+import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiUser, HiKey, HiHeart, HiOutlineBookmark, HiOutlinePhotograph, HiMenu, HiOutlineLightBulb } from "react-icons/hi";
 import { FiSend } from "react-icons/fi";
 export const maxWidth = window.innerWidth
 
+/// design system
+export const bold = 'S-CoreDream-6Bold'
+export const mainTheme = '#FF7B54'
+export const subTheme = '#C0C0C0'
 
 
 export const Mobile = styled.div`
@@ -29,6 +33,10 @@ export const Img = styled.img`
 `
 
 export const Tag = styled.div`
+
+`
+
+export const Span = styled.span`
 
 `
 
@@ -71,6 +79,16 @@ export const Hamburger = styled(HiMenu) <{ fontSize?: number, color?: string }>`
 `
 
 export const Question = styled(HiOutlineLightBulb) <{ fontSize?: number, color?: string }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.color && `color: ${props.color}`};
+`
+
+export const LoginUser = styled(HiUser) <{ fontSize?: number, color?: string }>`
+  ${props => props.fontSize && `font-size: ${props.fontSize}px`};
+  ${props => props.color && `color: ${props.color}`};
+`
+
+export const LoginPassword = styled(HiKey) <{ fontSize?: number, color?: string }>`
   ${props => props.fontSize && `font-size: ${props.fontSize}px`};
   ${props => props.color && `color: ${props.color}`};
 `
