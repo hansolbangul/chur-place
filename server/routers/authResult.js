@@ -16,11 +16,15 @@ authResult.post('/login', async (req, res, next) => {
 
   query = 'select * from member where member_code = ? and password = SHA2(?, 224)';
   const [data] = await pool.query(query, [authBody.member_id, authBody.password]);
-  const token = await sign(data[0].member_id, data[0].member_name, data[0].member_code);
   if (data.length > 0) {
-    res.status(201).json(await response({ token: token.token, name: data[0].member_name }));
+    const token = await sign(data[0].member_id, data[0].member_name, data[0].member_code);
+    if (data.length > 0) {
+      res.status(201).json(await response({ token: token.token, name: data[0].member_name }));
+    } else {
+      res.json(await not_found());
+    }
   } else {
-    res.json(await not_found());
+    res.json(await not_response('로그인 실패'))
   }
 });
 
