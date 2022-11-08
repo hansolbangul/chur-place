@@ -1,32 +1,76 @@
+import { useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { Flex, Hamburger, Question } from "../styled";
+import { isLoginAtom } from "../atoms";
+import { bold, Div, Flex, Hamburger, mainTheme, Question } from "../styled";
+import { Join } from "./Join";
+import { Login } from "./Login";
 
-interface IHeader {
-  setMenu: (ele: any) => void;
-  info: boolean;
-  setInfo: (ele: boolean) => void;
-}
-
-export const Header = ({ setMenu, info, setInfo }: IHeader) => {
+export const Header = () => {
+  const [menuOpen, setMenuOpen] = useState<boolean>(false)
+  const [useInfo, setUseInfo] = useState<boolean>(false)
+  const [loginOpen, setLoginOpen] = useState<boolean>(false)
+  const [joinOpen, setJoinOpen] = useState<boolean>(false)
+  // const isLogin = useRecoilValue(isLoginAtom)
 
   const Information = () => {
     return (
       // TODO 스와이퍼
-      <Info onClick={() => setInfo(false)} />
+      <Info onClick={() => setUseInfo(false)} />
     )
   }
+
+  const loginBtn = () => {
+    // if (!isLogin) {
+    setMenuOpen(false)
+    setLoginOpen(true)
+    // } else {
+
+    // }
+  }
+
+  const myPageBtn = () => {
+
+  }
+
   return (
-    <Container justify="space-between" align="center">
-      {info && <Information />}
-      <Circle onClick={() => setMenu((ele: any) => !ele)} justify="center" align="center">
-        <Hamburger fontSize={24} />
-      </Circle>
-      <Circle onClick={() => setInfo(true)} justify="center" align="center">
-        <Question fontSize={30} />
-      </Circle>
-    </Container>
+    <>
+      {loginOpen && <Login setOpen={setLoginOpen} setNext={setJoinOpen} />}
+      {joinOpen && <Join setOpen={setJoinOpen} />}
+      <Container justify="space-between" align="center">
+        {useInfo && <Information />}
+        <Div style={{ position: 'relative' }}>
+          <Circle onClick={() => setMenuOpen((ele: any) => !ele)} justify="center" align="center">
+            <Hamburger fontSize={24} />
+          </Circle>
+          {/* {menuOpen && <Menu onClick={loginBtn}>로그인하기</Menu>} */}
+          {menuOpen && <Menu onClick={myPageBtn}>마이페이지</Menu>}
+          {/* {menuOpen ? !isLogin ? <Menu onClick={loginClick}>로그인하기</Menu> : <Menu>마이페이지</Menu> : null} */}
+        </Div>
+        <Circle onClick={() => setUseInfo(true)} justify="center" align="center">
+          <Question fontSize={30} />
+        </Circle>
+      </Container>
+    </>
   )
 }
+
+const Menu = styled.div`
+  width: 80px;
+  background-color: ${mainTheme};
+  /* background-color: #fff; */
+  /* color: #000; */
+  /* color: ${mainTheme}; */
+  color: #fff;
+  font-family: ${bold};
+  border-radius: 12px;
+  position: absolute;
+  top: 68px;
+  left: 20px;
+  padding: 15px 25px;
+  box-shadow: 0px 4px 4px 1px rgba(0, 0, 0, 0.15);
+  text-align: center;
+`
 
 const Info = styled.div`
   position: fixed;

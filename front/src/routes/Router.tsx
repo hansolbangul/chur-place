@@ -5,13 +5,11 @@ import { ChurMap } from '../pages/ChurMap';
 import { Mobile } from '../styled';
 
 function Router() {
-  const [menuOpen, setMenuOpen] = useState<boolean>(false)
-  const [useInfo, setUseInfo] = useState<boolean>(false)
 
   return (
     <BrowserRouter>
       <Mobile>
-        <Header setMenu={setMenuOpen} info={useInfo} setInfo={setUseInfo} />
+        <Header />
         <Routes>
           <Route path="/nmap" element={<ChurMap />}></Route>
         </Routes>
