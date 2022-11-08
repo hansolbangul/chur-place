@@ -5,13 +5,12 @@ import { ISelect, ITag } from "../ts/interface";
 import { warning_notify } from "../ts/export";
 
 interface ICatT {
-  modal: boolean;
   tag: ITag[];
   select: number[];
   setSelect: (value: any) => void
 }
 
-export const CatTag = ({ modal, tag, select, setSelect }: ICatT) => {
+export const CatTag = ({ tag, select, setSelect }: ICatT) => {
   // const [select, setSelect] = useState<number[]>([])
   const selectTag = (item: ITag) => {
     console.log(select.find(_item => _item === item.tag_id))
@@ -30,10 +29,6 @@ export const CatTag = ({ modal, tag, select, setSelect }: ICatT) => {
       warning_notify("태그는 3개만 사용 가능합니다.")
     }
   }, [select])
-
-  useEffect(() => {
-    setSelect([])
-  }, [modal])
 
   return (
     <Column>

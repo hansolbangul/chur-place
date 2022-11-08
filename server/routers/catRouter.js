@@ -1,5 +1,17 @@
 import express from 'express';
 import authUtil from '../modules/auth.js';
+import multer from 'multer';
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../front/src/uploads/') // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().getFullYear() + new Date().getMonth() + new Date().getSeconds() + '_' + file.originalname.split('_').join('')) // cb 콜백함수를 통해 전송된 파일 이름 설정
+  }
+})
+// const upload = multer({ dest: 'uploads' });
+const upload = multer({ storage: storage })
 
 import { response, not_found, bad_response, not_response } from '../modules/responseMSG.js';
 
@@ -20,12 +32,12 @@ catRouter.post('/', async (req, res, next) => {
     await pool.query(query, [rows.insertId, item]);
   })
 
-  query = 'select name from cat left join type on cat.type = type.type_id where cat.cat_id = ?'
+  query = 'select name, type_id from cat left join type on cat.type = type.type_id where cat.cat_id = ?'
 
-  const [name] = await pool.query(query, [rows.insertId]);
+  const [cat] = await pool.query(query, [rows.insertId]);
 
   if (rows.insertId) {
-    res.status(201).json(await response({ ...name[0], cat_id: rows.insertId }));
+    res.status(201).json(await response({ ...cat[0], cat_id: rows.insertId }));
   } else {
     res.json(await not_found());
   }
@@ -73,20 +85,22 @@ catRouter.get('/tag', async (req, res, next) => {
   }
 });
 
-catRouter.get('/:id', async (req, res, next) => {
-  const cat_id = req.params.id;
+catRouter.post('/image/:id', upload.array('img'), async (req, res, next) => {
+  // catRouter.post('/image', (req, res, next) => {
+  const cat_id = req.params.id
+  const imageQuery = []
+  try {
+    req.files.forEach((item) => {
+      imageQuery.push(`insert into image (cat_id, path) value (${cat_id}, '${item.filename}')`)
+    })
 
-  let comment_query =
-    'select c.id, c.cat_id, c.comment, c.create_date, m.member_name from comment as c left join member as m on m.member_id = c.member_id where c.cat_id = ?';
+    await Promise.all(imageQuery.map(item => pool.query(item)))
+    res.status(201).json(await response());
+  } catch (error) {
+    console.log(error)
+    res.json(await not_response(error))
+  }
 
-  let tag_query = 'select name from cat_to_tag left join tag on tag.tag_id = cat_to_tag.tag_id where cat_to_tag.cat_id = ?'
-
-  const [[comment], [tag]] = await Promise.all([
-    pool.query(comment_query, [cat_id]),
-    pool.query(tag_query, [cat_id])
-  ])
-
-  res.status(201).json(await response({ comment: comment, tag: tag }));
 });
 
 export default catRouter;

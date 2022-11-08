@@ -1,18 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { Axios } from "../api/api";
+import { CAT } from "../api/url";
 import { DocumentAdd, Flex, Plus } from "../styled";
 
-export const CatImage = () => {
-  const [test, setTest] = useState(false)
+interface IImages {
+  // imageList: [File[]] | null,
+  imageList: any,
+  setImageList: (value: any) => void
+}
+
+export const CatImage = ({ imageList, setImageList }: IImages) => {
+  const imageInput = useRef<HTMLInputElement>(null)
+
+  const imageAdd = () => {
+    if (imageInput.current) imageInput.current.click()
+  }
+
   return (
     <Column>
       <SubTitle>
         이미지 등록
       </SubTitle>
       <Form>
-        <AddForm onClick={() => setTest(item => !item)} ><Plus fontSize={18} />이미지 추가</AddForm>
+        <AddForm onClick={imageAdd} ><Plus fontSize={18} />이미지 추가</AddForm>
+        <input name="img" onChange={(e) => setImageList(e.target.files)} multiple type="file" style={{ display: "none" }} ref={imageInput} />
         <ImageForm>
-          {new Array(12).fill('이미지').map((item, index) => <ImageList key={index}><DocumentAdd fontSize={18} />{item}</ImageList>)}
+          {imageList.length > 0 && Object.keys(imageList).map((item: any, index: number) => <ImageList key={index}><DocumentAdd fontSize={18} />{imageList[item].name}</ImageList>)}
         </ImageForm>
       </Form>
     </Column>

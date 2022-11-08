@@ -6,6 +6,7 @@ export interface IGetLocation {
   gender: number,
   name: string,
   member_id: number,
+  type_id: number
 }
 
 export interface IGetCatInfo {
@@ -25,4 +26,9 @@ export interface ITag { tag_id: number; name: string }
 export interface ISelect {
   type: number;
   tag: number[]
+}
+
+export interface IImg {
+  cat_id: number;
+  path: string
 }

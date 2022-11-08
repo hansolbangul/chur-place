@@ -34,14 +34,14 @@ export const ChurMap = () => {
     }
 
     Axios.get(LOCATION).then((data: { data: { data: IGetLocation[] } }) => {
-      console.log(data)
       data.data.data.map((item: any) => {
+        const image = require(`../img/type_${item.type_id}.svg`)
         const marker = new naver.maps.Marker({
           position: new naver.maps.LatLng(item.lat, item.lon),
           map: mapSet,
           title: '고양이',
           icon: {
-            content: `<img class='icon' src=${defaultImage} />`,
+            content: `<img class='icon' src=${image} />`,
           }
         })
         setMarker(marker)
@@ -111,7 +111,7 @@ export const ChurMap = () => {
 
   return (<MapForm>
     {!map && <div>loading</div>}
-    <Div id={'mapElement'} style={{ height: '100vh' }} />
+    <Div id={'mapElement'} style={{ height: '100%' }} />
     {footer()}
   </MapForm>
   );
