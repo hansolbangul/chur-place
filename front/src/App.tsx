@@ -52,6 +52,10 @@ const GlobalStyle = createGlobalStyle`
     width: 25px;
     height: 25px;
   }
+  .moveIcon{
+    width: 30px;
+    height: 30px;
+  }
 `
 
 function App() {

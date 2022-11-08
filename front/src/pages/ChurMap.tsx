@@ -84,10 +84,14 @@ export const ChurMap = () => {
 
     getData(mapSet)
 
+    const move = require(`../img/move.svg`).default
     const markerCenter = new naver.maps.Marker({
       position: location,
       map: mapSet,
       title: '신규위치',
+      icon: {
+        content: `<img class='moveIcon' src=${move} />`,
+      }
     });
     setMarker(markerCenter);
 
