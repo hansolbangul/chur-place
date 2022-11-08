@@ -14,7 +14,7 @@ import likeRouter from './routers/likeRouter.js';
 const app = express();
 
 let corsOptions = {
-  origin: ['http://localhost:3008', 'http://172.31.28.56:3008'],
+  origin: ['http://localhost:3008', 'http://172.31.28.56:3008', 'https://www.meowmeow.co.kr'],
   credentials: true
 }
 
