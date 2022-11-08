@@ -119,7 +119,7 @@ export const ChurMap = () => {
 
 const MapForm = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   position: relative;
   overflow: hidden;
 `

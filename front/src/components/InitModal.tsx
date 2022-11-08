@@ -30,7 +30,8 @@ export const InitModal = ({ modalInfo, viewInfo, setViewInfo, map, setMarker }: 
         <Footer hidden={modal} onClick={() => setModal(true)}>
           <Plus color="#fff" fontSize={32} />
         </Footer>
-        <Modal visible={modal} height={maxWidth < 500 ? 600 : 800}>
+        <Modal visible={modal} maxHeight={600}>
+          {/* <Modal visible={modal}> */}
           <ViewModal modal={modal} viewInfo={viewInfo} modalInfo={modalInfo} setViewInfo={setViewInfo} setModal={setModal} map={map} setMarker={setMarker} />
         </Modal>
       </>
@@ -56,11 +57,11 @@ const Footer = styled.div<{ hidden: boolean }>`
   align-items: center;
 `
 
-const Modal = styled.div<{ height: number, visible: boolean }>`
+const Modal = styled.div<{ maxHeight?: number, visible: boolean }>`
   position: absolute;
   bottom: ${props => props.visible ? 30 : -850}px;
-  width: ${maxWidth < 500 ? maxWidth - 50 : 500}px;
-  height: ${props => props.height}px;
+  width: ${maxWidth < 500 ? maxWidth - 50 : 450}px;
+  max-height: ${props => props.maxHeight}px;
   left: 50%;
   transform: translate(-50%, 0);
   z-index: 9999;

@@ -133,7 +133,7 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
     if (viewInfo) {
       return (
         <>
-          <Form height={maxWidth < 500 ? 550 : 750}>
+          <Form maxHeight={550}>
             <CatProfile src={require(`../img/type_${viewInfo.type_id}.svg`)} />
             <TagForm>{catTag.map((item, index) => <Tag key={index}>#{item}</Tag>)}</TagForm>
             <SwiperImage>
@@ -161,7 +161,7 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
     } else {
       return (
         <>
-          <Form none height={maxWidth < 500 ? 550 : 750}>
+          <Form none maxHeight={550}>
             <Title>고양이 제보하기</Title>
             <CatType setSelect={setSelectType} select={selectType} type={type} />
             <CatTag setSelect={setSelectTag} select={selectTag} tag={tag} />
@@ -333,12 +333,12 @@ const CatProfile = styled(Img)`
   height: 60px;
 `
 
-const Form = styled.div<{ height: number, none?: boolean }>`
+const Form = styled.div<{ maxHeight: number, none?: boolean }>`
   position: relative;
   bottom: -24px;
   width: 100%;
-  height: ${props => props.height}px;
-  max-height: ${props => props.height}px;
+  height: ${props => props.maxHeight}px;
+  max-height: ${props => props.maxHeight}px;
   border-radius: 20px;
   background-color: #fff;
   position: relative;

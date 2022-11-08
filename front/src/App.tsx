@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Router from './routes/Router';
 import 'swiper/swiper.min.css';
@@ -55,6 +55,19 @@ const GlobalStyle = createGlobalStyle`
 `
 
 function App() {
+
+  // 모바일 환경 아래 툴바 같은게 있는데, 해당 툴바 계산
+  function setScreenSize() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`); //"--vh"라는 속성으로 정의해준다.
+  }
+
+  useEffect(() => {
+    setScreenSize();
+    // 리사이징때마다 툴바 계산
+    window.addEventListener('resize', () => setScreenSize());
+  }, []);
+
   return (
     <>
       <GlobalStyle />
