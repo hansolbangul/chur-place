@@ -105,7 +105,7 @@ export const DocumentAdd = styled(HiDocumentAdd) <{ fontSize?: number, color?: s
 
 export const Cancel = styled(HiX)`
   color: #fff;
-  font-size: 32px;
+  font-size: 28px;
 `
 
 export const Plus = styled(HiPlusSm) <{ fontSize?: number, color?: string }>`
