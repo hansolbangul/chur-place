@@ -17,15 +17,18 @@ import { response, not_found, bad_response, not_response } from '../modules/resp
 
 const catRouter = express.Router();
 import _pool from '../modules/database.js';
+import { verify } from '../modules/jwt.js';
 const pool = _pool();
 
 let query = '';
 
 catRouter.post('/', async (req, res, next) => {
+  var token = req.headers.authorization.split('Bearer ')[1];
   const body = req.body;
+  const user = await verify(token);
 
   query = 'insert into `cat` (`age`, `lat`, `lon`, `type`, `member_id`, `gender`) values (?, ?, ?, ?, ?, ?)'
-  const [rows] = await pool.query(query, [0, body.lat, body.lon, body.type, 0, 0]);
+  const [rows] = await pool.query(query, [0, body.lat, body.lon, body.type, user.id, 0]);
 
   body.tag.forEach(async (item) => {
     query = 'insert into cat_to_tag (cat_id, tag_id) values (?, ?)';
@@ -44,11 +47,13 @@ catRouter.post('/', async (req, res, next) => {
 });
 
 catRouter.post('/comment/:id', async (req, res, next) => {
+  var token = req.headers.authorization.split('Bearer ')[1];
   const body = req.body;
   const cat_id = req.params.id;
+  const user = await verify(token);
 
   query = 'insert into comment (cat_id, member_id, comment) values (?, ?, ?)'
-  const [rows] = await pool.query(query, [cat_id, 1, body.comment]);
+  const [rows] = await pool.query(query, [cat_id, user.id, body.comment]);
 
   if (rows.insertId) {
     res.status(201).json(await response());
