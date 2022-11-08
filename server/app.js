@@ -8,6 +8,8 @@ import locationRouter from './routers/locationRouter.js'
 
 import { response, not_found, bad_response } from './modules/responseMSG.js';
 import catRouter from './routers/catRouter.js';
+import heartRouter from './routers/heartRouter.js';
+import likeRouter from './routers/likeRouter.js';
 
 const app = express();
 
@@ -24,6 +26,8 @@ app.use(cors(corsOptions));
 // api develop part
 app.use('/location', locationRouter);
 app.use('/cat', catRouter)
+app.use('/heart', heartRouter)
+app.use('/like', likeRouter)
 // app.use('/user', userRouter);
 // app.use('/auth', authResult);
 
