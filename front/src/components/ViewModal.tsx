@@ -139,7 +139,7 @@ export const ViewModal = ({ modalInfo, viewInfo, setViewInfo, modal, setModal, m
             <SwiperImage>
               <Swiper {...settings}>
                 {image.map((item, index) => {
-                  return <SwiperSlide style={{ display: "flex", justifyContent: 'center' }} key={index}><SlideImg src={require('../uploads/' + item.path)} /></SwiperSlide>
+                  return <SwiperSlide style={{ display: "flex", justifyContent: 'center' }} key={index}><SlideImg src={item.path} /></SwiperSlide>
                 })}
                 <SwiperSlide style={{ display: "flex", justifyContent: 'center', height: '100%' }}>
                   <AddImg onClick={() => setInputView(item => !item)}>{inputView ?

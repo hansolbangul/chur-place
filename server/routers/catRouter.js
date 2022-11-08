@@ -91,7 +91,7 @@ catRouter.post('/image/:id', upload.array('img'), async (req, res, next) => {
   const imageQuery = []
   try {
     req.files.forEach((item) => {
-      imageQuery.push(`insert into image (cat_id, path) value (${cat_id}, '${item.filename}')`)
+      imageQuery.push(`insert into image (cat_id, path) value (${cat_id}, '/uploads/${item.filename}')`)
     })
 
     await Promise.all(imageQuery.map(item => pool.query(item)))

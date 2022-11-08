@@ -27,6 +27,7 @@
     "./node_modules/**/*"
   ],
   "include": [
+    "src",
     "./src/**/*",
     "@type",
     "./src/custom.d.ts"
