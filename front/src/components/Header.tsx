@@ -44,8 +44,8 @@ export const Header = () => {
           <Circle onClick={() => setMenuOpen((ele: any) => !ele)} justify="center" align="center">
             <Hamburger fontSize={24} />
           </Circle>
-          {/* {menuOpen && <Menu onClick={loginBtn}>로그인하기</Menu>} */}
-          {menuOpen && <Menu onClick={myPageBtn}>마이페이지</Menu>}
+          {menuOpen && <Menu onClick={loginBtn}>로그인하기</Menu>}
+          {/* {menuOpen && <Menu onClick={myPageBtn}>마이페이지</Menu>} */}
           {/* {menuOpen ? !isLogin ? <Menu onClick={loginClick}>로그인하기</Menu> : <Menu>마이페이지</Menu> : null} */}
         </Div>
         <Circle onClick={() => setUseInfo(true)} justify="center" align="center">
@@ -71,6 +71,7 @@ const Menu = styled.div`
   padding: 15px 25px;
   box-shadow: 0px 4px 4px 1px rgba(0, 0, 0, 0.15);
   text-align: center;
+  cursor: pointer;
 `
 
 const Info = styled.div`
