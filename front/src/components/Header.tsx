@@ -1,15 +1,17 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { isLoginAtom } from "../atoms";
-import { bold, Div, Flex, Hamburger, mainTheme, Question } from "../styled";
+import { Back, bold, Div, Flex, Hamburger, mainTheme, Question } from "../styled";
 import { IHeader } from "../ts/interface";
 import { Join } from "./Join";
 import { Login } from "./Login";
 import { LoginForm } from "./LoginForm";
 
 export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
+  const navigate = useNavigate()
   const [useInfo, setUseInfo] = useState<boolean>(false)
   const [loginOpen, setLoginOpen] = useState<boolean>(false)
   const [joinOpen, setJoinOpen] = useState<boolean>(false)
@@ -32,7 +34,16 @@ export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
   }
 
   const myPageBtn = () => {
+    setMenuOpen(false)
+    navigate('/mypage')
+  }
 
+  const menuBtn = () => {
+    if (window.location.pathname === '/nmap') {
+      setMenuOpen((ele: boolean) => !ele)
+    } else {
+      navigate(-1)
+    }
   }
 
   return (
@@ -41,11 +52,11 @@ export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
       <Container justify="space-between" align="center">
         {useInfo && <Information />}
         <Div style={{ position: 'relative' }}>
-          <Circle onClick={() => setMenuOpen((ele: boolean) => !ele)} justify="center" align="center">
-            <Hamburger fontSize={24} />
+          <Circle onClick={menuBtn} justify="center" align="center">
+            {window.location.pathname === '/nmap' ? <Hamburger fontSize={24} /> : <Back />}
           </Circle>
-          {menuOpen && <Menu onClick={loginBtn}>로그인하기</Menu>}
-          {/* {menuOpen && <Menu onClick={myPageBtn}>마이페이지</Menu>} */}
+          {/* {menuOpen && <Menu onClick={loginBtn}>로그인하기</Menu>} */}
+          {menuOpen && <Menu onClick={myPageBtn}>마이페이지</Menu>}
           {/* {menuOpen ? !isLogin ? <Menu onClick={loginClick}>로그인하기</Menu> : <Menu>마이페이지</Menu> : null} */}
         </Div>
         <Circle onClick={() => setUseInfo(true)} justify="center" align="center">
