@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { isLoginAtom } from "../atoms";
 import { bold, Div, Flex, Hamburger, mainTheme, Question } from "../styled";
@@ -10,6 +10,7 @@ import { Login } from "./Login";
 import { LoginForm } from "./LoginForm";
 
 export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
+  const [isToken, setIsToken] = useRecoilState(isLoginAtom)
   const [useInfo, setUseInfo] = useState<boolean>(false)
   const [loginOpen, setLoginOpen] = useState<boolean>(false)
   const [joinOpen, setJoinOpen] = useState<boolean>(false)
@@ -44,7 +45,7 @@ export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
           <Circle onClick={() => setMenuOpen((ele: boolean) => !ele)} justify="center" align="center">
             <Hamburger fontSize={24} />
           </Circle>
-          {menuOpen && <Menu onClick={loginBtn}>로그인하기</Menu>}
+          {isToken === '' && menuOpen && <Menu onClick={loginBtn}>로그인하기</Menu>}
           {/* {menuOpen && <Menu onClick={myPageBtn}>마이페이지</Menu>} */}
           {/* {menuOpen ? !isLogin ? <Menu onClick={loginClick}>로그인하기</Menu> : <Menu>마이페이지</Menu> : null} */}
         </Div>
