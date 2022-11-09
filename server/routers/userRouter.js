@@ -27,6 +27,22 @@ userRouter.post('/join', async (req, res, next) => {
   }
 })
 
+userRouter.patch('/:id', authUtil.checkToken, async (req, res, next) => {
+  const member_id = req.params.id;
+  const member = req.body;
+  query = 'update member set member_name = ? where member_id = ?';
+  await pool.query(query, [member.member_name, member_id,]);
+
+  query = "select * from member where member_id = ?";
+  const [data] = await pool.query(query, [member_id]);
+
+  if (data.length > 0) {
+    res.status(201).json(await response('정보 수정 성공'));
+  } else {
+    res.json(await not_found());
+  }
+});
+
 // userRouter.post('/', async (req, res, next) => {
 //   const user = req.body;
 //   query = 'select * from user where user_id = ?';
