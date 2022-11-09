@@ -90,11 +90,14 @@ function App() {
       success_notify(data.data.name + ' 님 재방문 환영합니다.')
     } else {
       const { data: refresh } = await Axios.post(`${AUTH}/refresh`)
+      console.log(refresh)
       if (refresh.result) {
         Axios.defaults.headers.common['Authorization'] = `Bearer ${refresh.data.token}`
         setIsToken(refresh.data.token)
       } else {
         warning_notify('리프레시 실패..')
+        setIsToken('')
+        Axios.defaults.headers.common['Authorization'] = `Bearer `
       }
     }
   }

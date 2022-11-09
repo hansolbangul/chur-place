@@ -18,11 +18,7 @@ authResult.post('/login', async (req, res, next) => {
   const [data] = await pool.query(query, [authBody.member_id, authBody.password]);
   if (data.length > 0) {
     const token = await sign(data[0].member_id, data[0].member_name, data[0].member_code);
-    if (data.length > 0) {
-      res.status(201).json(await response({ token: token.token, name: data[0].member_name }));
-    } else {
-      res.json(await not_found());
-    }
+    res.status(201).json(await response({ token: token.token, name: data[0].member_name }));
   } else {
     res.json(await not_response('로그인 실패'))
   }

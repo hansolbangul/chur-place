@@ -59,14 +59,14 @@ export const Login = ({ setOpen, setNext }: ILogin) => {
     }
     const { data } = await Axios.post(`${AUTH}/login`, { member_id: loginData.id, password: loginData.password })
 
-    console.log(data)
     if (data.result) {
       console.log(data)
       success_notify(data.data.name + ' 님 환영합니다.')
       setIsToken(data.data.token)
       Axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`
-
       setOpen(false)
+    } else {
+      warning_notify('로그인 실패')
     }
   }
 
