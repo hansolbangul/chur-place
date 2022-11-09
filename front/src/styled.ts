@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiHeart, HiOutlineBookmark, HiBookmark, HiOutlinePhotograph, HiDocumentAdd, HiUser, HiKey, HiMenu, HiOutlineLightBulb } from "react-icons/hi";
+import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiHeart, HiOutlineBookmark, HiBookmark, HiOutlinePhotograph, HiDocumentAdd, HiUser, HiKey, HiMenu, HiOutlineLightBulb, HiArrowSmLeft } from "react-icons/hi";
 import { FiSend } from "react-icons/fi";
 export const maxWidth = window.innerWidth
 
@@ -117,3 +117,8 @@ export const Plus = styled(HiPlusSm) <{ fontSize?: number, color?: string }>`
   ${props => props.color && `color: ${props.color}`};
   ${props => props.fontSize && `font-size: ${props.fontSize}px`};
 `
+
+export const Back = styled(HiArrowSmLeft)`
+    color: #000;
+    font-size: 28px;
+  `
