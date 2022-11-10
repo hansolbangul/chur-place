@@ -10,8 +10,6 @@ const pool = _pool();
 let query = '';
 
 locationRouter.get('/', async (req, res, next) => {
-  console.log('user');
-
   query =
     'select * from cat left join type on cat.type = type.type_id;';
   const [data] = await pool.query(query);

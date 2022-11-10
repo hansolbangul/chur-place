@@ -89,7 +89,6 @@ heartRouter.get('/type', async (req, res, next) => {
 });
 
 heartRouter.get('/tag', async (req, res, next) => {
-  console.log('user');
 
   query =
     'select * from tag';

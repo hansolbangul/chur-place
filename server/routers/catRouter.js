@@ -63,7 +63,6 @@ catRouter.post('/comment/:id', async (req, res, next) => {
 });
 
 catRouter.get('/type', async (req, res, next) => {
-  console.log('user');
 
   query =
     'select * from type';
@@ -77,7 +76,6 @@ catRouter.get('/type', async (req, res, next) => {
 });
 
 catRouter.get('/tag', async (req, res, next) => {
-  console.log('user');
 
   query =
     'select * from tag';
