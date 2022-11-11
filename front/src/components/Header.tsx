@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { Axios } from "../api/api";
 import { LIKE } from "../api/url";
@@ -14,10 +14,10 @@ import { LoginForm } from "./LoginForm";
 
 export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
   const navigate = useNavigate()
+  const [isToken, setIsToken] = useRecoilState(isLoginAtom)
   const [useInfo, setUseInfo] = useState<boolean>(false)
   const [loginOpen, setLoginOpen] = useState<boolean>(false)
   const [joinOpen, setJoinOpen] = useState<boolean>(false)
-  const isLogin = useRecoilValue(isLoginAtom)
 
   useEffect(() => {
     getData()
@@ -66,7 +66,7 @@ export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
           <Circle onClick={menuBtn} justify="center" align="center">
             {window.location.pathname === '/nmap' ? <Hamburger fontSize={24} /> : <Back />}
           </Circle>
-          {menuOpen ? !isLogin ? <Menu onClick={loginBtn}>로그인하기</Menu> : <Menu onClick={myPageBtn}>마이페이지</Menu> : null}
+          {menuOpen ? !isToken ? <Menu onClick={loginBtn}>로그인하기</Menu> : <Menu onClick={myPageBtn}>마이페이지</Menu> : null}
         </Div>
         <Circle onClick={() => setUseInfo(true)} justify="center" align="center">
           <Question fontSize={30} />
