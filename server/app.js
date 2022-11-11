@@ -13,6 +13,7 @@ import { response, not_found, bad_response } from './modules/responseMSG.js';
 import catRouter from './routers/catRouter.js';
 import heartRouter from './routers/heartRouter.js';
 import likeRouter from './routers/likeRouter.js';
+import mypageRouter from './routers/mypageRouter.js';
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use('/heart', heartRouter)
 app.use('/like', likeRouter)
 app.use('/user', userRouter);
 app.use('/auth', authResult);
+app.use('/mypage', mypageRouter);
 
 // 404 Error Handling
 app.use(async (req, res, next) => {
