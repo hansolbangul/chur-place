@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { Axios } from "../api/api";
+import { LIKE } from "../api/url";
 import { isLoginAtom } from "../atoms";
 import { Back, bold, Div, Flex, Hamburger, mainTheme, Question } from "../styled";
 import { IHeader } from "../ts/interface";
@@ -15,9 +17,18 @@ export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
   const [useInfo, setUseInfo] = useState<boolean>(false)
   const [loginOpen, setLoginOpen] = useState<boolean>(false)
   const [joinOpen, setJoinOpen] = useState<boolean>(false)
-  // const isLogin = useRecoilValue(isLoginAtom)
+  const isLogin = useRecoilValue(isLoginAtom)
 
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const getData = async () => {
+    const { data } = await Axios.get(`${LIKE}/best`)
+    console.log(data)
+  }
   const Information = () => {
+
     return (
       // TODO 스와이퍼
       <Info onClick={() => setUseInfo(false)} />
@@ -55,9 +66,7 @@ export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
           <Circle onClick={menuBtn} justify="center" align="center">
             {window.location.pathname === '/nmap' ? <Hamburger fontSize={24} /> : <Back />}
           </Circle>
-          {/* {menuOpen && <Menu onClick={loginBtn}>로그인하기</Menu>} */}
-          {menuOpen && <Menu onClick={myPageBtn}>마이페이지</Menu>}
-          {/* {menuOpen ? !isLogin ? <Menu onClick={loginClick}>로그인하기</Menu> : <Menu>마이페이지</Menu> : null} */}
+          {menuOpen ? !isLogin ? <Menu onClick={loginBtn}>로그인하기</Menu> : <Menu onClick={myPageBtn}>마이페이지</Menu> : null}
         </Div>
         <Circle onClick={() => setUseInfo(true)} justify="center" align="center">
           <Question fontSize={30} />
