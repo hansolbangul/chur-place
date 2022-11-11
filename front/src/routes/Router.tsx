@@ -7,6 +7,7 @@ import { maxWidth } from '../styled';
 import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import { MyPage } from '../pages/MyPage';
+import { Total } from '../pages/Total';
 
 function Router() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
@@ -18,6 +19,7 @@ function Router() {
         <Routes>
           <Route path="/nmap" element={<ChurMap menuOpen={menuOpen} setMenuOpen={setMenuOpen} />}></Route>
           <Route path="/mypage" element={<MyPage menuOpen={menuOpen} setMenuOpen={setMenuOpen} />}></Route>
+          <Route path="/total" element={<Total menuOpen={menuOpen} setMenuOpen={setMenuOpen} />}></Route>
         </Routes>
         <ToastAlert position="top-center" />
       </Mobile>
