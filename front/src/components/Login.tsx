@@ -7,18 +7,14 @@ import { AUTH } from "../api/url";
 import { isLoginAtom } from "../atoms";
 import { bold, Cancel, Div, Flex, LoginPassword, LoginUser, mainTheme, maxWidth, Span, subTheme } from "../styled";
 import { success_notify, warning_notify } from "../ts/export";
-
-interface ILogin {
-  setOpen: (ele: boolean) => void;
-  setNext: (ele: boolean) => void;
-}
+import { IModalOpen } from "../ts/interface";
 
 interface IBoolean {
   id: boolean;
   password: boolean;
 }
 
-export const Login = ({ setOpen, setNext }: ILogin) => {
+export const Login = ({ modal, setModal }: IModalOpen) => {
   const [isToken, setIsToken] = useRecoilState(isLoginAtom)
   const usernameRef = useRef<any>(null)
   const passwordRef = useRef<any>(null)
@@ -64,14 +60,14 @@ export const Login = ({ setOpen, setNext }: ILogin) => {
       success_notify(data.data.name + ' 님 환영합니다.')
       setIsToken(data.data.token)
       Axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`
-      setOpen(false)
+      setModal({ ...modal, login: false })
     } else {
       warning_notify('로그인 실패')
     }
   }
 
   return (
-    <Background onClick={() => setOpen(false)}>
+    <Background onClick={() => setModal({ ...modal, login: false })}>
       <Modal onClick={(e: any) => e.stopPropagation()}>
         <InputContainer onBlur={idBlur} onClick={idClick} click={isFocus.id} alert={isAlert.id}>
           <LoginUser style={{ position: 'absolute', top: '28px', left: '16px' }} fontSize={20} color={subTheme} />
@@ -85,11 +81,11 @@ export const Login = ({ setOpen, setNext }: ILogin) => {
         </InputContainer>
         <Flex justify="center" align="center" style={{ position: 'absolute', bottom: '-24px', left: '50%', transform: 'translate(-50%, 0)' }}>
           <Button onClick={loginBtn}>로그인</Button>
-          <CancelBtn onClick={() => setOpen(false)} justify='center' align='center'>
+          <CancelBtn onClick={() => setModal({ ...modal, login: false })} justify='center' align='center'>
             <Cancel />
           </CancelBtn>
         </Flex>
-        <Span onClick={() => { setNext(true); setOpen(false); }} style={{ color: subTheme, float: 'right' }}>회원가입</Span>
+        <Span onClick={() => setModal({ ...modal, login: false, join: true })} style={{ color: subTheme, float: 'right' }}>회원가입</Span>
       </Modal>
     </Background >
   )

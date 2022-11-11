@@ -4,10 +4,7 @@ import styled from "styled-components";
 import { Axios } from "../api/api";
 import { bold, Flex, mainTheme, maxWidth, Span, subTheme, Cancel } from "../styled";
 import { success_notify, warning_notify } from "../ts/export";
-
-interface IJoin {
-  setOpen: (ele: boolean) => void;
-}
+import { IModalOpen } from "../ts/interface";
 
 interface IForm {
   id: string,
@@ -27,7 +24,7 @@ interface IBool {
   passwordConfirm: boolean
 }
 
-export const Join = ({ setOpen }: IJoin) => {
+export const Join = ({ modal, setModal }: IModalOpen) => {
   const idRef = useRef<any>(null)
   const emailRef = useRef<any>(null)
   const nicknameRef = useRef<any>(null)
@@ -116,7 +113,7 @@ export const Join = ({ setOpen }: IJoin) => {
       }
       else {
         success_notify('회원가입에 성공하셨습니다')
-        setOpen(false)
+        setModal({ ...modal, join: false })
       }
     } else {
       warning_notify('필수값을 입력해주세요!')
@@ -124,7 +121,7 @@ export const Join = ({ setOpen }: IJoin) => {
   }
 
   return (
-    <Background onClick={() => setOpen(false)}>
+    <Background onClick={() => setModal({ ...modal, join: false })}>
       <Modal onClick={(e: any) => e.stopPropagation()}>
         {/* 아이디 */}
         <InputContainer onBlur={idBlur} onClick={idClick} click={isFocus.id} alert={isAlert.id}>
@@ -167,7 +164,7 @@ export const Join = ({ setOpen }: IJoin) => {
         </InputContainer>
         <Flex justify="center" align="center" style={{ position: 'absolute', bottom: '-24px', left: '50%', transform: 'translate(-50%, 0)' }}>
           <Button onClick={joinBtn}>회원가입</Button>
-          <CancelBtn justify="center" align="center" onClick={() => setOpen(false)}>
+          <CancelBtn justify="center" align="center" onClick={() => setModal({ ...modal, join: false })}>
             <Cancel />
           </CancelBtn>
         </Flex>

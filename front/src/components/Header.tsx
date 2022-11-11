@@ -1,50 +1,29 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { Axios } from "../api/api";
-import { LIKE } from "../api/url";
 import { isLoginAtom } from "../atoms";
-import { Back, bold, Div, Flex, Hamburger, mainTheme, Question } from "../styled";
-import { IHeader } from "../ts/interface";
-import { Join } from "./Join";
-import { Login } from "./Login";
-import { LoginForm } from "./LoginForm";
+import { Back, Beaker, bold, Div, Flex, Hamburger, mainTheme, Question } from "../styled";
+import { IHeader, IModal } from "../ts/interface";
+import { ModalComponent } from "./ModalComponent";
 
 export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
   const navigate = useNavigate()
-  const [isToken, setIsToken] = useRecoilState(isLoginAtom)
-  const [useInfo, setUseInfo] = useState<boolean>(false)
-  const [loginOpen, setLoginOpen] = useState<boolean>(false)
-  const [joinOpen, setJoinOpen] = useState<boolean>(false)
-
-  useEffect(() => {
-    getData()
-  }, [])
-
-  const getData = async () => {
-    const { data } = await Axios.get(`${LIKE}/best`)
-    console.log(data)
-  }
-  const Information = () => {
-
-    return (
-      // TODO 스와이퍼
-      <Info onClick={() => setUseInfo(false)} />
-    )
-  }
+  const isToken = useRecoilValue(isLoginAtom)
+  const [modal, setModal] = useState<IModal>({ info: false, login: false, join: false, best: false })
 
   const loginBtn = () => {
     // if (!isLogin) {
     setMenuOpen(false)
-    setLoginOpen(true)
+    setModal({ ...modal, login: true })
     // } else {
 
     // }
   }
 
   const myPageBtn = () => {
+    console.log('click')
     setMenuOpen(false)
     navigate('/mypage')
   }
@@ -59,18 +38,22 @@ export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
 
   return (
     <>
-      <LoginForm loginOpen={loginOpen} joinOpen={joinOpen} setLoginOpen={setLoginOpen} setJoinOpen={setJoinOpen} />
+      <ModalComponent modal={modal} setModal={setModal} />
       <Container justify="space-between" align="center">
-        {useInfo && <Information />}
         <Div style={{ position: 'relative' }}>
           <Circle onClick={menuBtn} justify="center" align="center">
             {window.location.pathname === '/nmap' ? <Hamburger fontSize={24} /> : <Back />}
           </Circle>
-          {menuOpen ? !isToken ? <Menu onClick={loginBtn}>로그인하기</Menu> : <Menu onClick={myPageBtn}>마이페이지</Menu> : null}
+          {menuOpen ? isToken === '' ? <Menu onClick={loginBtn}>로그인하기</Menu> : <Menu onClick={myPageBtn}>마이페이지</Menu> : null}
         </Div>
-        <Circle onClick={() => setUseInfo(true)} justify="center" align="center">
+        <Circle onClick={() => setModal({ ...modal, info: true })} justify="center" align="center">
           <Question fontSize={30} />
         </Circle>
+        <Container style={{ marginTop: '24px' }} justify="flex-end" align="center">
+          <Circle onClick={() => setModal({ ...modal, best: true })} justify="center" align="center">
+            <Beaker />
+          </Circle>
+        </Container>
       </Container>
     </>
   )
@@ -92,15 +75,6 @@ const Menu = styled.div`
   box-shadow: 0px 4px 4px 1px rgba(0, 0, 0, 0.15);
   text-align: center;
   cursor: pointer;
-`
-
-const Info = styled.div`
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background-color: cornflowerblue;
-  top: 0;
-  left: 0;
 `
 
 const Container = styled(Flex)`

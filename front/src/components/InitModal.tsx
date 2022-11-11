@@ -6,7 +6,6 @@ import { defaultImage, warning_notify } from "../ts/export";
 import { ViewModal } from "./ViewModal";
 import { useRecoilState } from "recoil";
 import { isLoginAtom } from "../atoms";
-import { LoginForm } from "./LoginForm";
 
 interface IModal extends IHeader {
   modalInfo: ILatLon | naver.maps.LatLng;

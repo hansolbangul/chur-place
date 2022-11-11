@@ -37,3 +37,14 @@ export interface IHeader {
   menuOpen: boolean;
   setMenuOpen: (item: any) => void
 }
+
+export interface IModal {
+  info: boolean;
+  login: boolean;
+  join: boolean;
+  best: boolean;
+}
+export interface IModalOpen {
+  modal: IModal;
+  setModal: (item: IModal) => void;
+}
