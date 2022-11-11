@@ -95,6 +95,7 @@ function App() {
         setIsToken(refresh.data.token)
       } else {
         warning_notify('리프레시 실패..')
+        setIsToken('')
       }
     }
   }
