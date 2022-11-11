@@ -61,4 +61,24 @@ likeRouter.patch('/', async (req, res, next) => {
 
 });
 
+likeRouter.get('/best', async (req, res, next) => {
+  try {
+    query = `
+      select l.cat_id, count(*) as count, c.age, c.gender, c.create_date from member_to_like as l 
+      left join cat as c on c.cat_id = l.cat_id
+      group by cat_id order by count desc
+    `
+
+    const [data] = await pool.query(query);
+
+    if (data.length > 0) {
+      res.status(201).json(await response(data));
+    } else {
+      res.status(201).json(await response(false));
+    }
+  } catch (error) {
+    res.json(await not_response(error));
+  }
+})
+
 export default likeRouter;
