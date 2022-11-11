@@ -5,10 +5,12 @@ import { response, not_found, bad_response, not_response } from '../modules/resp
 
 const userRouter = express.Router();
 import _pool from '../modules/database.js';
+import { verify } from '../modules/jwt.js';
 const pool = _pool();
 
 var query = '';
 
+// 회원가입
 userRouter.post('/join', async (req, res, next) => {
   const member = req.body;
   query = 'select * from member where member_code = ?'
@@ -27,90 +29,18 @@ userRouter.post('/join', async (req, res, next) => {
   }
 })
 
-userRouter.patch('/:id', authUtil.checkToken, async (req, res, next) => {
-  const member_id = req.params.id;
-  const member = req.body;
-  query = 'update member set member_name = ? where member_id = ?';
-  await pool.query(query, [member.member_name, member_id,]);
+// 회원 정보 수정
+userRouter.patch('/update', async (req, res, next) => {
+  var token = req.headers.authorization.split('Bearer ')[1];
+  const user = await verify(token);
+  const body = req.body;
 
-  query = "select * from member where member_id = ?";
-  const [data] = await pool.query(query, [member_id]);
+  query = 'update member set member_name = ?, member_code = ?, gender = ?, email = ? where member_id = ?';
 
-  if (data.length > 0) {
+  const [data] = await pool.query(query, [body.nickname, body.id, body.gender, body.email, user.id]);
+
+  if (data) {
     res.status(201).json(await response('정보 수정 성공'));
-  } else {
-    res.json(await not_found());
-  }
-});
-
-// userRouter.post('/', async (req, res, next) => {
-//   const user = req.body;
-//   query = 'select * from user where user_id = ?';
-//   const [overlap] = await pool.query(query, [user.user_id]);
-
-//   // 아이디 중복 체크
-//   if (overlap.length > 0) {
-//     return res.json(await not_response('아이디가 중복됩니다.'));
-//   }
-
-//   query =
-//     'insert into user (user_id, password) values (?, ?)';
-//   const [rows] = await pool.query(query, [
-//     user.user_id,
-//     user.password,
-//   ]);
-
-//   query =
-//     "select user_id, password from user where seq = ?";
-//   const [data] = await pool.query(query, [rows.insertId]);
-//   console.log(data);
-//   if (data.length > 0) {
-//     res.status(201).json(await response(data));
-//   } else {
-//     res.json(await not_found());
-//   }
-// });
-
-userRouter.get('/login', async (req, res, next) => {
-  var query = 'select * from user_login';
-  const [data] = await pool.query(query);
-  if (data.length > 0) {
-    res.status(201).json(await response(data));
-  } else {
-    res.json(await not_found());
-  }
-});
-
-userRouter.get('/', authUtil.checkToken, async (req, res, next) => {
-  console.log('user');
-  const queryBody = req.query;
-  query =
-    "select seq, user_id, user_name from user where user_id = ?";
-  const [data] = await pool.query(query, [queryBody.user_id]);
-  if (data.length > 0) {
-    res.status(201).json(await response(data));
-  } else {
-    res.json(await not_found());
-  }
-});
-
-userRouter.patch('/:id', authUtil.checkToken, async (req, res, next) => {
-  const user_id = req.params.id;
-  const user = req.body;
-  query =
-    'update user set user_id = ?, password = ? where user_id = ?';
-  await pool.query(query, [
-    user.user_id,
-    user.password,
-    user_id,
-  ]);
-
-  query =
-    "select user_id from user where user_id = ?";
-  const [data] = await pool.query(query, [user.user_id]);
-
-  if (data.length > 0) {
-    res.status(201).json(await response(data));
   } else {
     res.json(await not_found());
   }
