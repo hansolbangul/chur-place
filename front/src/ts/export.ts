@@ -22,9 +22,3 @@ export const success_notify = (message: string) => {
     hideProgressBar: true,
   });
 };
-
-export const imgRequire = (path: string) => {
-  console.log(path);
-
-  return require(`../uploads/` + path)
-}

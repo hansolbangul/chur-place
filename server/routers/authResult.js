@@ -27,7 +27,7 @@ authResult.post('/login', async (req, res, next) => {
 authResult.post('/me', authUtil.checkToken, async (req, res, next) => {
   var token = req.headers.authorization.split('Bearer ')[1];
   const user = await verify(token);
-  console.log(user)
+  // console.log(user)
   if (user.id) {
     res.status(201).json(await response({ member_id: user.id, name: user.name, code: user.code, iat: user.iat, exp: user.exp }));
   } else {
