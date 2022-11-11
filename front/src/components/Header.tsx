@@ -13,19 +13,14 @@ export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
   const isToken = useRecoilValue(isLoginAtom)
   const [modal, setModal] = useState<IModal>({ info: false, login: false, join: false, best: false })
 
-  const loginBtn = () => {
-    // if (!isLogin) {
-    setMenuOpen(false)
-    setModal({ ...modal, login: true })
-    // } else {
-
-    // }
-  }
-
-  const myPageBtn = () => {
-    console.log('click')
-    setMenuOpen(false)
-    navigate('/mypage')
+  const handleMenu = (e: any) => {
+    if (e.target.className.includes('mypage')) {
+      setMenuOpen(false)
+      navigate('/mypage')
+    } else {
+      setMenuOpen(false)
+      setModal({ ...modal, login: true })
+    }
   }
 
   const menuBtn = () => {
@@ -44,13 +39,13 @@ export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
           <Circle onClick={menuBtn} justify="center" align="center">
             {window.location.pathname === '/nmap' ? <Hamburger fontSize={24} /> : <Back />}
           </Circle>
-          {menuOpen ? isToken === '' ? <Menu onClick={loginBtn}>로그인하기</Menu> : <Menu onClick={myPageBtn}>마이페이지</Menu> : null}
+          {menuOpen ? isToken === '' ? <Menu className="login" onClick={handleMenu}>로그인하기</Menu> : <Menu className="mypage" onClick={handleMenu}>마이페이지</Menu> : null}
         </Div>
         <Circle onClick={() => setModal({ ...modal, info: true })} justify="center" align="center">
           <Question fontSize={30} />
         </Circle>
         <Container style={{ marginTop: '24px' }} justify="flex-end" align="center">
-          <Circle onClick={() => setModal({ ...modal, best: true })} justify="center" align="center">
+          <Circle onClick={() => navigate('/total')} justify="center" align="center">
             <Beaker />
           </Circle>
         </Container>
@@ -62,9 +57,6 @@ export const Header = ({ menuOpen, setMenuOpen }: IHeader) => {
 const Menu = styled.div`
   width: 80px;
   background-color: ${mainTheme};
-  /* background-color: #fff; */
-  /* color: #000; */
-  /* color: ${mainTheme}; */
   color: #fff;
   font-family: ${bold};
   border-radius: 12px;
@@ -75,6 +67,7 @@ const Menu = styled.div`
   box-shadow: 0px 4px 4px 1px rgba(0, 0, 0, 0.15);
   text-align: center;
   cursor: pointer;
+  z-index: 9999;
 `
 
 const Container = styled(Flex)`
@@ -91,4 +84,5 @@ const Circle = styled(Flex)`
   background-color: #fff;
   box-shadow: 0px 4px 8px 1px rgba(0, 0, 0, 0.25);
   margin: 0 20px;
+  cursor: pointer;
 `
