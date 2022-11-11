@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiHeart, HiOutlineBookmark, HiBookmark, HiOutlinePhotograph, HiDocumentAdd, HiUser, HiKey, HiMenu, HiOutlineLightBulb, HiArrowSmLeft } from "react-icons/hi";
+import { HiPlusSm, HiX, HiCheck, HiOutlineHeart, HiHeart, HiOutlineBookmark, HiBookmark, HiOutlinePhotograph, HiDocumentAdd, HiUser, HiKey, HiMenu, HiOutlineLightBulb, HiArrowSmLeft, HiOutlineBeaker } from "react-icons/hi";
 import { FiSend } from "react-icons/fi";
 export const maxWidth = window.innerWidth
 
@@ -45,6 +45,9 @@ export const Title = styled.div`
   margin-bottom: 10px;
 `
 
+export const Container = styled.div`
+  padding: 120px 32px 0;
+`
 
 /// 아이콘
 
@@ -119,6 +122,11 @@ export const Plus = styled(HiPlusSm) <{ fontSize?: number, color?: string }>`
 `
 
 export const Back = styled(HiArrowSmLeft)`
+    color: #000;
+    font-size: 28px;
+  `
+
+export const Beaker = styled(HiOutlineBeaker)`
     color: #000;
     font-size: 28px;
   `
