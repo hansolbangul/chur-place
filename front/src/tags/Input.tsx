@@ -20,9 +20,9 @@ const backColors = {
   success: '#58a9f4'
 }
 
-function Input({ size = "md", variant = "default", onClick }) {
+function Input({ size = "md", variant = "default", onChange }) {
   return (
-    <input onClick={onClick}
+    <input onChange={onChange}
       css={{
         outline: 'none',
         ...sizeStyles[size],
